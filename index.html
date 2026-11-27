@@ -10,92 +10,428 @@
 <title>Pokémon Champions シングル構築診断（スマホ快適版）</title>
 <style>
   :root {
-    --bg:#0d111a;--panel:#151c2c;--panel-2:#1d273d;--border:#2a3754;
-    --text:#eef3ff;--muted:#93a4c8;--accent:#38bdf8;
-    --good:#22c55e;--warn:#f59e0b;--danger:#ef4444;
-    --safe-bottom:env(safe-area-inset-bottom,0px);
+    --bg: #0d111a;
+    --panel: #151c2c;
+    --panel-2: #1d273d;
+    --border: #2a3754;
+    --text: #eef3ff;
+    --muted: #93a4c8;
+    --accent: #38bdf8;
+    --good: #22c55e;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;line-height:1.48;overflow-x:hidden;}
-  .top-sticky{position:sticky;top:0;z-index:50;background:rgba(13,17,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
-  .top-bar{max-width:1180px;margin:0 auto;padding:10px 14px 8px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
-  .app-title{font-size:0.96rem;font-weight:800;display:flex;align-items:center;gap:6px;white-space:nowrap;}
-  .reg-pill{font-size:0.68rem;padding:2px 7px;border-radius:999px;background:rgba(56,189,248,0.16);color:var(--accent);border:1px solid rgba(56,189,248,0.45);}
-  .mini-score{display:flex;align-items:center;gap:8px;background:var(--panel-2);border:1px solid var(--border);padding:4px 10px;border-radius:999px;font-size:0.8rem;font-weight:700;cursor:pointer;flex-shrink:0;}
-  .mini-grade{font-size:1rem;font-weight:900;}
-  .tabs-wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);padding:0 8px 6px;gap:6px;}
-  .tab-btn{background:transparent;color:var(--muted);border:1px solid transparent;border-radius:8px;padding:7px 4px;font-size:0.78rem;font-weight:700;cursor:pointer;text-align:center;}
-  .tab-btn.active{background:var(--panel-2);color:#fff;border-color:var(--accent);}
-  .tab-dot{display:inline-block;background:var(--danger);color:#fff;font-size:0.65rem;padding:0 5px;border-radius:999px;margin-left:3px;vertical-align:top;}
-  .container{max-width:1180px;margin:0 auto;padding:12px 12px calc(32px + var(--safe-bottom));}
-  .tab-panel{display:none;}.tab-panel.active{display:block;}
-  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;}
-  .card-title{margin:0 0 10px;font-size:0.98rem;font-weight:800;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--border);padding-bottom:8px;}
-  .btn{background:var(--panel-2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:0.8rem;font-weight:700;cursor:pointer;touch-action:manipulation;}
-  .btn:active{transform:scale(0.98);}
-  .btn-primary{background:linear-gradient(135deg,#2563eb,#0284c7);border-color:#38bdf8;color:#fff;}
-  .btn-danger{border-color:rgba(239,68,68,0.55);color:#fca5a5;}
-  .btn-sm{padding:5px 9px;font-size:0.74rem;}.btn-block{width:100%;padding:12px;font-size:0.92rem;}
-  .save-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:space-between;margin-bottom:10px;}
-  .slot-tabs{display:flex;gap:6px;}
-  .save-pill{padding:6px 12px;border-radius:999px;font-size:0.78rem;font-weight:700;background:var(--panel-2);color:var(--muted);border:1px solid var(--border);cursor:pointer;}
-  .save-pill.active{background:rgba(56,189,248,0.18);color:#fff;border-color:var(--accent);}
-  .presets-scroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;-webkit-overflow-scrolling:touch;}
-  .presets-scroll .btn{white-space:nowrap;flex-shrink:0;}
-  .party-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:10px;}
-  .slot{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:11px;}
-  .slot.mega-active{border-color:#c084fc;box-shadow:0 0 0 1px rgba(192,132,252,0.35);}
-  .slot-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;font-size:0.8rem;color:var(--muted);}
-  .slot-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
-  select{width:100%;max-width:100%;background:#0f1625;color:var(--text);border:1px solid #354569;border-radius:8px;padding:8px;font-size:16px;}
-  @media(min-width:768px){select{font-size:0.86rem;padding:7px 8px;}}
-  select:focus{outline:none;border-color:var(--accent);}
-  .slot-meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center;font-size:0.74rem;color:var(--muted);margin-top:4px;}
-  .type-badge{display:inline-block;padding:1px 7px;border-radius:4px;font-size:0.7rem;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.45);}
-  .mega-tag{background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff;padding:1px 6px;border-radius:4px;font-size:0.68rem;font-weight:700;}
-  .rank-tag{background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;color:#cbd5e1;}
-  .dash-grid{display:grid;grid-template-columns:200px 1fr;gap:12px;}
-  @media(max-width:720px){.dash-grid{grid-template-columns:1fr;}}
-  .score-box{background:linear-gradient(160deg,#17233d,#101727);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
-  .grade-circle{font-size:3rem;font-weight:900;line-height:1.05;margin:2px 0;}
-  .score-num{font-size:1.15rem;font-weight:800;color:var(--accent);}
-  .bars-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:9px;}
-  .metric{background:var(--panel-2);border:1px solid var(--border);border-radius:9px;padding:10px;}
-  .metric-head{display:flex;justify-content:space-between;font-size:0.82rem;font-weight:700;margin-bottom:5px;}
-  .bar-bg{height:7px;background:#0b101c;border-radius:999px;overflow:hidden;margin-bottom:5px;}
-  .bar-fill{height:100%;border-radius:999px;transition:width 0.3s ease;}
-  .metric-desc{font-size:0.74rem;color:var(--muted);}
-  .item-list{display:flex;flex-direction:column;gap:9px;}
-  .alert-item{background:var(--panel-2);border-left:4px solid var(--accent);border-radius:8px;padding:10px 11px;font-size:0.82rem;}
-  .alert-item.high{border-left-color:var(--danger);}.alert-item.mid{border-left-color:var(--warn);}.alert-item.good{border-left-color:var(--good);}
-  .alert-title{font-weight:700;margin-bottom:4px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
-  .alert-body{color:#cbd5e1;font-size:0.78rem;}
-  .pill{display:inline-block;padding:2px 7px;border-radius:999px;font-size:0.69rem;font-weight:700;white-space:nowrap;}
-  .pill-danger{background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.5);}
-  .pill-warn{background:rgba(245,158,11,0.2);color:#fcd34d;border:1px solid rgba(245,158,11,0.5);}
-  .pill-good{background:rgba(34,197,94,0.2);color:#86efac;border:1px solid rgba(34,197,94,0.5);}
-  .pill-info{background:rgba(56,189,248,0.18);color:#7dd3fc;border:1px solid rgba(56,189,248,0.45);}
-  .rec-card{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:11px;display:flex;flex-direction:column;gap:6px;}
-  .rec-actions{display:flex;gap:6px;align-items:center;margin-top:2px;}
-  .rec-actions select{width:auto;min-width:96px;padding:5px 7px;font-size:14px;}
-  .filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
-  .threat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:9px;}
-  .threat-card{background:var(--panel-2);border:1px solid var(--border);border-radius:9px;padding:10px;}
-  .threat-card.severe{border-color:rgba(239,68,68,0.75);background:rgba(239,68,68,0.09);}
-  .threat-card.caution{border-color:rgba(245,158,11,0.6);background:rgba(245,158,11,0.06);}
-  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  table{width:100%;border-collapse:collapse;font-size:0.76rem;min-width:480px;}
-  th,td{border:1px solid var(--border);padding:5px 4px;text-align:center;}
-  th{background:#101727;color:var(--muted);font-weight:700;}
-  .eff-4{background:rgba(239,68,68,0.42);color:#fecaca;font-weight:800;}
-  .eff-2{background:rgba(239,68,68,0.22);color:#fca5a5;font-weight:700;}
-  .eff-05{background:rgba(34,197,94,0.2);color:#86efac;}
-  .eff-025{background:rgba(34,197,94,0.38);color:#bbf7d0;font-weight:700;}
-  .eff-0{background:rgba(56,189,248,0.26);color:#bae6fd;font-weight:700;}
-  .row-danger{background:rgba(239,68,68,0.09);}
-  .notice-box{background:rgba(56,189,248,0.08);border:1px dashed rgba(56,189,248,0.4);border-radius:8px;padding:9px 11px;font-size:0.74rem;color:var(--muted);margin-top:10px;}
-  .toast{position:fixed;left:50%;bottom:calc(20px + var(--safe-bottom));transform:translateX(-50%) translateY(90px);background:#1e293b;color:#fff;border:1px solid var(--accent);padding:10px 16px;border-radius:999px;font-size:0.82rem;font-weight:700;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.45);transition:transform 0.25s ease;pointer-events:none;white-space:nowrap;}
-  .toast.show{transform:translateX(-50%) translateY(0);}
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    line-height: 1.48;
+    overflow-x: hidden;
+  }
+
+  /* Sticky Top Header + Live Score Bar */
+  .top-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(13, 17, 26, 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .top-bar {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 10px 14px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .app-title {
+    font-size: 0.96rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .reg-pill {
+    font-size: 0.68rem;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(56,189,248,0.16);
+    color: var(--accent);
+    border: 1px solid rgba(56,189,248,0.45);
+  }
+  .mini-score {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .mini-grade { font-size: 1rem; font-weight: 900; }
+
+  /* Tabs */
+  .tabs-wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0 8px 6px;
+    gap: 6px;
+  }
+  .tab-btn {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 7px 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.15s;
+    position: relative;
+  }
+  .tab-btn.active {
+    background: var(--panel-2);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .tab-dot {
+    display: inline-block;
+    background: var(--danger);
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 0 5px;
+    border-radius: 999px;
+    margin-left: 3px;
+    vertical-align: top;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 12px 12px calc(32px + var(--safe-bottom));
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    margin: 0 0 10px;
+    font-size: 0.98rem;
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+
+  /* Buttons & Controls */
+  .btn {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 11px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: linear-gradient(135deg, #2563eb, #0284c7);
+    border-color: #38bdf8;
+    color: #fff;
+  }
+  .btn-danger { border-color: rgba(239,68,68,0.55); color: #fca5a5; }
+  .btn-sm { padding: 5px 9px; font-size: 0.74rem; }
+  .btn-block { width: 100%; padding: 12px; font-size: 0.92rem; }
+
+  /* Save Slots */
+  .save-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .slot-tabs { display: flex; gap: 6px; }
+  .save-pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: var(--panel-2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .save-pill.active {
+    background: rgba(56,189,248,0.18);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* Presets horizontal scroll on mobile */
+  .presets-scroll {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .presets-scroll .btn { white-space: nowrap; flex-shrink: 0; }
+
+  /* Party Grid - Zero horizontal overflow */
+  .party-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+    gap: 10px;
+  }
+  .slot {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px;
+  }
+  .slot.mega-active {
+    border-color: #c084fc;
+    box-shadow: 0 0 0 1px rgba(192,132,252,0.35);
+  }
+  .slot-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 7px;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .slot-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-bottom: 7px;
+  }
+  /* 16px on mobile prevents iOS Safari auto-zoom */
+  select {
+    width: 100%;
+    max-width: 100%;
+    background: #0f1625;
+    color: var(--text);
+    border: 1px solid #354569;
+    border-radius: 8px;
+    padding: 8px 8px;
+    font-size: 16px;
+  }
+  @media (min-width: 768px) {
+    select { font-size: 0.86rem; padding: 7px 8px; }
+  }
+  select:focus { outline: none; border-color: var(--accent); }
+
+  .slot-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .type-badge {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+  }
+  .mega-tag {
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+  .rank-tag {
+    background: rgba(255,255,255,0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: #cbd5e1;
+  }
+
+  /* Dashboard */
+  .dash-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 720px) { .dash-grid { grid-template-columns: 1fr; } }
+  .score-box {
+    background: linear-gradient(160deg, #17233d, #101727);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .grade-circle { font-size: 3rem; font-weight: 900; line-height: 1.05; margin: 2px 0; }
+  .score-num { font-size: 1.15rem; font-weight: 800; color: var(--accent); }
+  .bars-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+    gap: 9px;
+  }
+  .metric {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px;
+  }
+  .metric-head { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 5px; }
+  .bar-bg { height: 7px; background: #0b101c; border-radius: 999px; overflow: hidden; margin-bottom: 5px; }
+  .bar-fill { height: 100%; border-radius: 999px; transition: width 0.3s ease; }
+  .metric-desc { font-size: 0.74rem; color: var(--muted); }
+
+  /* Lists & Cards */
+  .item-list { display: flex; flex-direction: column; gap: 9px; }
+  .alert-item {
+    background: var(--panel-2);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 11px;
+    font-size: 0.82rem;
+  }
+  .alert-item.high { border-left-color: var(--danger); }
+  .alert-item.mid { border-left-color: var(--warn); }
+  .alert-item.good { border-left-color: var(--good); }
+  .alert-title { font-weight: 700; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .alert-body { color: #cbd5e1; font-size: 0.78rem; }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 0.69rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .pill-danger { background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.5); }
+  .pill-warn { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.5); }
+  .pill-good { background: rgba(34,197,94,0.2); color: #86efac; border: 1px solid rgba(34,197,94,0.5); }
+  .pill-info { background: rgba(56,189,248,0.18); color: #7dd3fc; border: 1px solid rgba(56,189,248,0.45); }
+
+  .rec-card {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .rec-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-top: 2px;
+  }
+  .rec-actions select {
+    width: auto;
+    min-width: 96px;
+    padding: 5px 7px;
+    font-size: 14px;
+  }
+
+  /* Threat Filter & Grid */
+  .filter-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .threat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 9px;
+  }
+  .threat-card {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px;
+  }
+  .threat-card.severe { border-color: rgba(239,68,68,0.75); background: rgba(239,68,68,0.09); }
+  .threat-card.caution { border-color: rgba(245,158,11,0.6); background: rgba(245,158,11,0.06); }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.76rem; min-width: 480px; }
+  th, td { border: 1px solid var(--border); padding: 5px 4px; text-align: center; }
+  th { background: #101727; color: var(--muted); font-weight: 700; }
+  .eff-4 { background: rgba(239,68,68,0.42); color: #fecaca; font-weight: 800; }
+  .eff-2 { background: rgba(239,68,68,0.22); color: #fca5a5; font-weight: 700; }
+  .eff-05 { background: rgba(34,197,94,0.2); color: #86efac; }
+  .eff-025 { background: rgba(34,197,94,0.38); color: #bbf7d0; font-weight: 700; }
+  .eff-0 { background: rgba(56,189,248,0.26); color: #bae6fd; font-weight: 700; }
+  .row-danger { background: rgba(239,68,68,0.09); }
+
+  .notice-box {
+    background: rgba(56,189,248,0.08);
+    border: 1px dashed rgba(56,189,248,0.4);
+    border-radius: 8px;
+    padding: 9px 11px;
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(20px + var(--safe-bottom));
+    transform: translateX(-50%) translateY(90px);
+    background: #1e293b;
+    color: #fff;
+    border: 1px solid var(--accent);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    transition: transform 0.25s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -103,7 +439,7 @@
 <div class="top-sticky">
   <div class="top-bar">
     <div class="app-title">⚔️ チャンプ構築診断 <span class="reg-pill">M-C内定のみ</span></div>
-    <div class="mini-score" onclick="switchTab('diag')">
+    <div class="mini-score" onclick="switchTab('diag')" title="診断タブへ移動">
       <span>評価</span>
       <span id="miniGrade" class="mini-grade">-</span>
       <span id="miniScore" style="color:var(--accent);">0点</span>
@@ -118,6 +454,7 @@
 </div>
 
 <div class="container">
+  <!-- TAB 1: 編成 -->
   <div id="tab-edit" class="tab-panel active">
     <div class="card">
       <div class="save-bar">
@@ -126,12 +463,13 @@
           <button class="save-pill" id="saveBtn-1" onclick="selectSaveSlot(1)">構築B</button>
           <button class="save-pill" id="saveBtn-2" onclick="selectSaveSlot(2)">構築C</button>
         </div>
-        <div style="display:flex;gap:6px;">
+        <div style="display:flex; gap:6px;">
           <button class="btn btn-sm" onclick="copyPartyText()">📋 コピー</button>
           <button class="btn btn-sm btn-danger" onclick="clearParty()">🗑 空にする</button>
         </div>
       </div>
-      <div style="font-size:0.74rem;color:var(--muted);margin-bottom:6px;font-weight:700;">上位構築サンプル（横スクロール可）：</div>
+
+      <div style="font-size:0.74rem; color:var(--muted); margin-bottom:6px; font-weight:700;">上位構築サンプルを読み込む（横にスクロール可）：</div>
       <div class="presets-scroll">
         <button class="btn btn-sm" onclick="loadPreset('lucarioZ')">Tier1: メガルカリオZ対面</button>
         <button class="btn btn-sm" onclick="loadPreset('kabamanda')">Tier1: カバマンダ＋サフゴ</button>
@@ -140,34 +478,58 @@
         <button class="btn btn-sm" onclick="loadPreset('psychicBlastoise')">流行: イエッサン＋カメックス</button>
         <button class="btn btn-sm" onclick="loadPreset('draft')">課題あり試作サンプル</button>
       </div>
+
       <div id="partyGrid" class="party-grid"></div>
+
       <div style="margin-top:12px;">
         <button class="btn btn-primary btn-block" onclick="switchTab('diag')">📊 このパーティの診断結果・改善点を見る →</button>
       </div>
-      <div class="notice-box">※ 構築は自動保存されます。メガストーン所持でメガ後のタイプ・特性・Sで評価。未実装道具（ハチマキ・メガネ・チョッキ・ブーツ・ダイス等）除外済み。</div>
+
+      <div class="notice-box">
+        ※ 構築はブラウザに自動保存されます。メガストーンを持たせると自動でメガ後のタイプ・特性・Sラインで評価されます。未実装道具（ハチマキ・メガネ・チョッキ・ブーツ・ダイス等）は除外済みです。
+      </div>
     </div>
   </div>
 
+  <!-- TAB 2: 診断・改善 -->
   <div id="tab-diag" class="tab-panel">
     <div class="card">
-      <div class="card-title"><span>総合評価スコア</span><span id="summaryBadges" style="display:flex;gap:5px;flex-wrap:wrap;"></span></div>
+      <div class="card-title">
+        <span>総合評価スコア</span>
+        <span id="summaryBadges" style="display:flex; gap:5px; flex-wrap:wrap;"></span>
+      </div>
       <div class="dash-grid">
         <div class="score-box">
-          <div style="font-size:0.78rem;color:var(--muted);">総合ランク</div>
+          <div style="font-size:0.78rem; color:var(--muted);">総合ランク</div>
           <div id="gradeText" class="grade-circle">-</div>
           <div id="scoreText" class="score-num">0 / 100点</div>
-          <div id="gradeComment" style="font-size:0.76rem;color:var(--muted);margin-top:4px;"></div>
+          <div id="gradeComment" style="font-size:0.76rem; color:var(--muted); margin-top:4px;"></div>
         </div>
         <div id="metricsBox" class="bars-box"></div>
       </div>
     </div>
-    <div class="card"><div class="card-title"><span>優先改善ポイント</span></div><div id="issuesList" class="item-list"></div></div>
-    <div class="card"><div class="card-title"><span>おすすめ補完ポケモン＆内定道具 TOP5</span></div><div id="recList" class="item-list"></div></div>
+
+    <div class="card">
+      <div class="card-title"><span>優先改善ポイント</span></div>
+      <div id="issuesList" class="item-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span>おすすめ補完ポケモン＆内定道具 TOP5</span>
+        <span style="font-size:0.72rem; color:var(--muted);">入れ替え先を選んで即テスト可</span>
+      </div>
+      <div id="recList" class="item-list"></div>
+    </div>
   </div>
 
+  <!-- TAB 3: きつい相手 -->
   <div id="tab-threat" class="tab-panel">
     <div class="card">
-      <div class="card-title"><span>相手に来たらきついポケモン（24体）</span><span id="threatSummary" style="font-size:0.76rem;color:var(--muted);"></span></div>
+      <div class="card-title">
+        <span>相手に来たらきついポケモン（主要24体）</span>
+        <span id="threatSummary" style="font-size:0.76rem; color:var(--muted);"></span>
+      </div>
       <div class="filter-bar">
         <button class="save-pill active" id="thFilt-all" onclick="setThreatFilter('all')">すべて (24)</button>
         <button class="save-pill" id="thFilt-severe" onclick="setThreatFilter('severe')">🚨 きついのみ</button>
@@ -177,230 +539,1028 @@
     </div>
   </div>
 
+  <!-- TAB 4: 相性・上位構築 -->
   <div id="tab-matrix" class="tab-panel">
-    <div class="card"><div class="card-title"><span>防御タイプ相性表（特性・風船・半減実込み）</span></div><div class="table-wrap" id="typeTableWrap"></div></div>
-    <div class="card"><div class="card-title"><span>上位構築アーキタイプとの照合・相性</span></div><div id="archetypeList" class="item-list"></div></div>
+    <div class="card">
+      <div class="card-title">
+        <span>防御タイプ相性表（特性・風船・半減実込み）</span>
+        <span style="font-size:0.72rem; color:var(--muted);">横にスクロール可</span>
+      </div>
+      <div class="table-wrap" id="typeTableWrap"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>上位構築アーキタイプとの照合・相性</span></div>
+      <div id="archetypeList" class="item-list"></div>
+    </div>
   </div>
 </div>
 
 <div id="toast" class="toast"></div>
 
 <script>
-const TYPES=['ノーマル','ほのお','みず','でんき','くさ','こおり','かくとう','どく','じめん','ひこう','エスパー','むし','いわ','ゴースト','ドラゴン','あく','はがね','フェアリー'];
-const TYPE_COLOR={'ノーマル':'#9ca3af','ほのお':'#ea580c','みず':'#2563eb','でんき':'#ca8a04','くさ':'#16a34a','こおり':'#0891b2','かくとう':'#b91c1c','どく':'#9333ea','じめん':'#b45309','ひこう':'#6366f1','エスパー':'#db2777','むし':'#65a30d','いわ':'#78716c','ゴースト':'#5b21b6','ドラゴン':'#4f46e5','あく':'#374151','はがね':'#475569','フェアリー':'#ec4899'};
-const CHART={'ノーマル':{'いわ':0.5,'ゴースト':0,'はがね':0.5},'ほのお':{'ほのお':0.5,'みず':0.5,'くさ':2,'こおり':2,'むし':2,'いわ':0.5,'ドラゴン':0.5,'はがね':2},'みず':{'ほのお':2,'みず':0.5,'くさ':0.5,'じめん':2,'いわ':2,'ドラゴン':0.5},'でんき':{'みず':2,'でんき':0.5,'くさ':0.5,'じめん':0,'ひこう':2,'ドラゴン':0.5},'くさ':{'ほのお':0.5,'みず':2,'くさ':0.5,'どく':0.5,'じめん':2,'ひこう':0.5,'むし':0.5,'いわ':2,'ドラゴン':0.5,'はがね':0.5},'こおり':{'ほのお':0.5,'みず':0.5,'くさ':2,'こおり':0.5,'じめん':2,'ひこう':2,'ドラゴン':2,'はがね':0.5},'かくとう':{'ノーマル':2,'こおり':2,'どく':0.5,'ひこう':0.5,'エスパー':0.5,'むし':0.5,'いわ':2,'ゴースト':0,'あく':2,'はがね':2,'フェアリー':0.5},'どく':{'くさ':2,'どく':0.5,'じめん':0.5,'いわ':0.5,'ゴースト':0.5,'はがね':0,'フェアリー':2},'じめん':{'ほのお':2,'でんき':2,'くさ':0.5,'どく':2,'ひこう':0,'むし':0.5,'いわ':2,'はがね':2},'ひこう':{'でんき':0.5,'くさ':2,'かくとう':2,'むし':2,'いわ':0.5,'はがね':0.5},'エスパー':{'かくとう':2,'どく':2,'エスパー':0.5,'あく':0,'はがね':0.5},'むし':{'ほのお':0.5,'くさ':2,'かくとう':0.5,'どく':0.5,'ひこう':0.5,'エスパー':2,'ゴースト':0.5,'あく':2,'はがね':0.5,'フェアリー':0.5},'いわ':{'ほのお':2,'こおり':2,'かくとう':0.5,'じめん':0.5,'ひこう':2,'むし':2,'はがね':0.5},'ゴースト':{'ノーマル':0,'エスパー':2,'ゴースト':2,'あく':0.5},'ドラゴン':{'ドラゴン':2,'はがね':0.5,'フェアリー':0},'あく':{'かくとう':0.5,'エスパー':2,'ゴースト':2,'あく':0.5,'フェアリー':0.5},'はがね':{'ほのお':0.5,'みず':0.5,'でんき':0.5,'こおり':2,'いわ':2,'はがね':0.5,'フェアリー':2},'フェアリー':{'ほのお':0.5,'かくとう':2,'どく':0.5,'ドラゴン':2,'あく':2,'はがね':0.5}};
-function typeEff(a,ds){let m=1;for(const d of ds){const v=CHART[a]?.[d];if(v!==undefined)m*=v;}return m;}
+const TYPES = [
+  'ノーマル','ほのお','みず','でんき','くさ','こおり',
+  'かくとう','どく','じめん','ひこう','エスパー','むし',
+  'いわ','ゴースト','ドラゴン','あく','はがね','フェアリー'
+];
+const TYPE_COLOR = {
+  'ノーマル':'#9ca3af','ほのお':'#ea580c','みず':'#2563eb','でんき':'#ca8a04',
+  'くさ':'#16a34a','こおり':'#0891b2','かくとう':'#b91c1c','どく':'#9333ea',
+  'じめん':'#b45309','ひこう':'#6366f1','エスパー':'#db2777','むし':'#65a30d',
+  'いわ':'#78716c','ゴースト':'#5b21b6','ドラゴン':'#4f46e5','あく':'#374151',
+  'はがね':'#475569','フェアリー':'#ec4899'
+};
+const CHART = {
+  'ノーマル': {'いわ':0.5,'ゴースト':0,'はがね':0.5},
+  'ほのお': {'ほのお':0.5,'みず':0.5,'くさ':2,'こおり':2,'むし':2,'いわ':0.5,'ドラゴン':0.5,'はがね':2},
+  'みず': {'ほのお':2,'みず':0.5,'くさ':0.5,'じめん':2,'いわ':2,'ドラゴン':0.5},
+  'でんき': {'みず':2,'でんき':0.5,'くさ':0.5,'じめん':0,'ひこう':2,'ドラゴン':0.5},
+  'くさ': {'ほのお':0.5,'みず':2,'くさ':0.5,'どく':0.5,'じめん':2,'ひこう':0.5,'むし':0.5,'いわ':2,'ドラゴン':0.5,'はがね':0.5},
+  'こおり': {'ほのお':0.5,'みず':0.5,'くさ':2,'こおり':0.5,'じめん':2,'ひこう':2,'ドラゴン':2,'はがね':0.5},
+  'かくとう': {'ノーマル':2,'こおり':2,'どく':0.5,'ひこう':0.5,'エスパー':0.5,'むし':0.5,'いわ':2,'ゴースト':0,'あく':2,'はがね':2,'フェアリー':0.5},
+  'どく': {'くさ':2,'どく':0.5,'じめん':0.5,'いわ':0.5,'ゴースト':0.5,'はがね':0,'フェアリー':2},
+  'じめん': {'ほのお':2,'でんき':2,'くさ':0.5,'どく':2,'ひこう':0,'むし':0.5,'いわ':2,'はがね':2},
+  'ひこう': {'でんき':0.5,'くさ':2,'かくとう':2,'むし':2,'いわ':0.5,'はがね':0.5},
+  'エスパー': {'かくとう':2,'どく':2,'エスパー':0.5,'あく':0,'はがね':0.5},
+  'むし': {'ほのお':0.5,'くさ':2,'かくとう':0.5,'どく':0.5,'ひこう':0.5,'エスパー':2,'ゴースト':0.5,'あく':2,'はがね':0.5,'フェアリー':0.5},
+  'いわ': {'ほのお':2,'こおり':2,'かくとう':0.5,'じめん':0.5,'ひこう':2,'むし':2,'はがね':0.5},
+  'ゴースト': {'ノーマル':0,'エスパー':2,'ゴースト':2,'あく':0.5},
+  'ドラゴン': {'ドラゴン':2,'はがね':0.5,'フェアリー':0},
+  'あく': {'かくとう':0.5,'エスパー':2,'ゴースト':2,'あく':0.5,'フェアリー':0.5},
+  'はがね': {'ほのお':0.5,'みず':0.5,'でんき':0.5,'こおり':2,'いわ':2,'はがね':0.5,'フェアリー':2},
+  'フェアリー': {'ほのお':0.5,'かくとう':2,'どく':0.5,'ドラゴン':2,'あく':2,'はがね':0.5}
+};
+function typeEff(atkType, defTypes) {
+  let m = 1;
+  for (const dt of defTypes) {
+    const val = CHART[atkType]?.[dt];
+    if (val !== undefined) m *= val;
+  }
+  return m;
+}
 
-const GENERAL_ITEMS=['きあいのタスキ','こだわりスカーフ','いのちのたま','たべのこし','オボンのみ','ラムのみ','ゴツゴツメット','ふうせん','レッドカード','だっしゅつボタン','ひかりのねんど','グランドコート','たつじんのおび','ちからのハチマキ','ものしりメガネ','しろいハーブ','メンタルハーブ','ピントレンズ','こうかくレンズ','フォーカスレンズ','メトロノーム','おおきなねっこ','くろいてっきゅう','きれいなぬけがら','しめつけバンド','ノーマルジュエル','エレキシード','グラスシード','サイコシード','ミストシード','あついいわ','しめったいわ','さらさらいわ','つめたいいわ','のろいのおふだ(1.2倍)','もくたん(1.2倍)','しんぴのしずく(1.2倍)','くろおび(1.2倍)','きせきのタネ(1.2倍)','ようせいのハネ(1.2倍)','メタルコート(1.2倍)','くろいメガネ(1.2倍)','まがったスプーン(1.2倍)','りゅうのキバ(1.2倍)','とけないこおり(1.2倍)','やわらかいすな(1.2倍)','じしゃく(1.2倍)','どくバリ(1.2倍)','するどいくちばし(1.2倍)','ぎんのこな(1.2倍)','かたいいし(1.2倍)','シルクのスカーフ(1.2倍)','シュカのみ(地面半減)','ヨプのみ(格闘半減)','リリバのみ(鋼半減)','オッカのみ(炎半減)','ヤチェのみ(氷半減)','ソクノのみ(電気半減)','ナモのみ(悪半減)','カシブのみ(霊半減)','ロゼルのみ(妖半減)','バコウのみ(飛行半減)','ウタンのみ(超半減)','ビアーのみ(毒半減)','イトケのみ(水半減)','リンドのみ(草半減)','ヨロギのみ(岩半減)','ハバンのみ(龍半減)'];
-const BERRY_RESIST={'シュカのみ(地面半減)':'じめん','ヨプのみ(格闘半減)':'かくとう','リリバのみ(鋼半減)':'はがね','オッカのみ(炎半減)':'ほのお','ヤチェのみ(氷半減)':'こおり','ソクノのみ(電気半減)':'でんき','ナモのみ(悪半減)':'あく','カシブのみ(霊半減)':'ゴースト','ロゼルのみ(妖半減)':'フェアリー','バコウのみ(飛行半減)':'ひこう','ウタンのみ(超半減)':'エスパー','ビアーのみ(毒半減)':'どく','イトケのみ(水半減)':'みず','リンドのみ(草半減)':'くさ','ヨロギのみ(岩半減)':'いわ','ハバンのみ(龍半減)':'ドラゴン'};
-const ROLES=['物理アタッカー','特殊アタッカー','両刀アタッカー','積みエース','物理受け','特殊受け','クッション・サイクル','起点作成・サポート'];
-
-const POKEMON_DB={
-  'ガブリアス':{rank:1,types:['ドラゴン','じめん'],ability:'さめはだ',stats:[108,130,95,80,85,102],defaultItem:'ガブリアスナイトZ',defaultRole:'特殊アタッカー',off:['ドラゴン','じめん','いわ','ほのお'],tags:['sr','fast','steelCheck'],megas:{'ガブリアスナイトZ':{name:'メガガブリアスZ',types:['ドラゴン'],ability:'ふゆう',stats:[108,130,85,141,85,151],defaultRole:'特殊アタッカー',off:['ドラゴン','じめん','ほのお','こおり'],tags:['s151','fast','wallbreak','steelCheck']},'ガブリアスナイト':{name:'メガガブリアス',types:['ドラゴン','じめん'],ability:'すなのちから',stats:[108,170,115,120,95,92],defaultRole:'両刀アタッカー',off:['ドラゴン','じめん','ほのお','いわ'],tags:['wallbreak','steelCheck']}}},
-  'アシレーヌ':{rank:2,types:['みず','フェアリー'],ability:'げきりゅう',stats:[80,74,74,126,116,60],defaultItem:'オボンのみ',defaultRole:'特殊アタッカー',off:['みず','フェアリー','こおり','ゴースト'],tags:['priority','spBulk','wallbreak']},
-  'ミミッキュ':{rank:3,types:['ゴースト','フェアリー'],ability:'ばけのかわ',stats:[55,90,80,50,105,96],defaultItem:'いのちのたま',defaultRole:'積みエース',off:['ゴースト','フェアリー','くさ'],tags:['priority','antiSetup','stopper']},
-  'カバルドン':{rank:4,types:['じめん'],ability:'すなおこし',stats:[108,112,118,68,72,47],defaultItem:'ゴツゴツメット',defaultRole:'クッション・サイクル',off:['じめん','いわ'],tags:['sr','phaze','physBulk','steelCheck']},
-  'ブリジュラス':{rank:5,types:['はがね','ドラゴン'],ability:'じきゅうりょく',stats:[90,105,130,125,65,85],defaultItem:'きあいのタスキ',defaultRole:'特殊アタッカー',off:['はがね','ドラゴン','でんき','あく'],tags:['sr','physBulk','stopper']},
-  'ルカリオ':{rank:6,types:['かくとう','はがね'],ability:'せいしんりょく',stats:[70,110,70,115,70,90],defaultItem:'ルカリオナイトZ',defaultRole:'特殊アタッカー',off:['かくとう','はがね','あく','ノーマル'],tags:['priority','steelCheck'],megas:{'ルカリオナイトZ':{name:'メガルカリオZ',types:['かくとう','はがね'],ability:'はどうのぼうご',stats:[70,100,70,164,70,151],defaultRole:'特殊アタッカー',off:['かくとう','はがね','あく'],tags:['s151','fast','priority','wallbreak','steelCheck','contactResist']},'ルカリオナイト':{name:'メガルカリオ',types:['かくとう','はがね'],ability:'てきおうりょく',stats:[70,145,88,140,70,112],defaultRole:'物理アタッカー',off:['かくとう','はがね','こおり','ノーマル'],tags:['fast','priority','wallbreak','steelCheck']}}},
-  'リザードン':{rank:7,types:['ほのお','ひこう'],ability:'もうか',stats:[78,84,78,109,85,100],defaultItem:'リザードナイトY',defaultRole:'特殊アタッカー',off:['ほのお','くさ','ひこう','じめん'],tags:['steelCheck'],megas:{'リザードナイトY':{name:'メガリザードンY',types:['ほのお','ひこう'],ability:'ひでり',stats:[78,104,78,159,115,100],defaultRole:'特殊アタッカー',off:['ほのお','くさ','じめん','ひこう'],tags:['wallbreak','steelCheck','weather','spBulk']},'リザードナイトX':{name:'メガリザードンX',types:['ほのお','ドラゴン'],ability:'かたいツメ',stats:[78,130,111,130,85,100],defaultRole:'積みエース',off:['ほのお','ドラゴン','じめん'],tags:['wallbreak','steelCheck']}}},
-  'グソクムシャ':{rank:8,types:['むし','みず'],ability:'ききかいひ',stats:[75,125,140,60,90,40],defaultItem:'グソクムシャナイト',defaultRole:'物理アタッカー',off:['むし','みず','かくとう','あく'],tags:['priority','physBulk'],megas:{'グソクムシャナイト':{name:'メガグソクムシャ',types:['むし','はがね'],ability:'かたいツメ',stats:[75,150,175,70,120,40],defaultRole:'物理アタッカー',off:['むし','みず','かくとう','はがね','あく'],tags:['priority','physBulk','spBulk','wallbreak']}}},
-  'イダイトウ(オス)':{rank:9,types:['みず','ゴースト'],ability:'てきおうりょく',stats:[120,112,65,80,75,78],defaultItem:'こだわりスカーフ',defaultRole:'物理アタッカー',off:['みず','ゴースト','こおり'],tags:['priority','stopper','wallbreak']},
-  'カイリュー':{rank:10,types:['ド// === 後半②ここから ===
-const THREATS=[
-  {id:'メガガブリアスZ',rank:1,types:['ドラゴン'],ability:'ふゆう',atkTypes:['ドラゴン','じめん','ほのお'],cat:'spec',spd:151,bulk:'mid',note:'S151最速＆ふゆう。地面の一貫と高速特殊/両刀火力が危険'},
-  {id:'ガブリアス(タスキ/起点)',rank:1,types:['ドラゴン','じめん'],ability:'さめはだ',atkTypes:['じめん','ドラゴン','いわ'],cat:'phys',spd:102,bulk:'mid',note:'ステロ撒きor剣舞アタッカー。型判別が難しい'},
-  {id:'アシレーヌ',rank:2,types:['みず','フェアリー'],ability:'げきりゅう',atkTypes:['みず','フェアリー'],cat:'spec',spd:60,bulk:'spHigh',note:'水/妖の広い攻撃範囲と高い特防で対面性能が非常に高い'},
-  {id:'ミミッキュ',rank:3,types:['ゴースト','フェアリー'],ability:'ばけのかわ',atkTypes:['ゴースト','フェアリー'],cat:'phys',spd:96,bulk:'mid',note:'化けの皮で1回行動保証＋剣舞かげうちによるストッパー性能'},
-  {id:'カバルドン',rank:4,types:['じめん'],ability:'すなおこし',atkTypes:['じめん'],cat:'phys',spd:47,bulk:'physHigh',note:'ステロ＋あくび＋ゴツメ/吹き飛ばしで展開を阻害'},
-  {id:'ブリジュラス',rank:5,types:['はがね','ドラゴン'],ability:'じきゅうりょく',atkTypes:['はがね','ドラゴン','でんき'],cat:'spec',spd:85,bulk:'physHigh',note:'物理耐久と広い特殊技（流星群・ラスカノ・エレクトロビーム等）'},
-  {id:'メガルカリオZ',rank:6,types:['かくとう','はがね'],ability:'はどうのぼうご',atkTypes:['かくとう','はがね','あく'],cat:'spec',spd:151,bulk:'contact',note:'S151＋C164＋接触技半減。先制接触技での縛りが効きにくい'},
-  {id:'メガリザードンY',rank:7,types:['ほのお','ひこう'],ability:'ひでり',atkTypes:['ほのお','くさ','じめん'],cat:'spec',spd:100,bulk:'spHigh',note:'晴れ下C159の超高火力炎＋ソラビで水受けすら破壊'},
-  {id:'メガグソクムシャ',rank:8,types:['むし','はがね'],ability:'かたいツメ',atkTypes:['むし','みず','はがね','かくとう'],cat:'phys',spd:40,bulk:'physHigh',note:'B175/D120の要塞耐久＋かたいツメであいがしら・ビルドアップ'},
-  {id:'イダイトウ(オス)',rank:9,types:['みず','ゴースト'],ability:'てきおうりょく',atkTypes:['みず','ゴースト'],cat:'phys',spd:117,bulk:'mid',note:'スカーフお墓参り＋ウェーブタックルの終盤スイープ力'},
-  {id:'カイリュー(通常/メガ)',rank:10,types:['ドラゴン','ひこう'],ability:'マルチスケイル',atkTypes:['ドラゴン','ひこう','ノーマル','じめん'],cat:'both',spd:100,bulk:'multi',note:'マルスケ行動保証＋龍舞神速や高火力特殊メガの型誤認'},
-  {id:'サーフゴー',rank:11,types:['はがね','ゴースト'],ability:'おうごんのからだ',atkTypes:['はがね','ゴースト'],cat:'spec',spd:84,bulk:'mid',note:'変化技無効＋風船による地面透かし＋ゴールドラッシュの崩し'},
-  {id:'メガボーマンダ',rank:12,types:['ドラゴン','ひこう'],ability:'スカイスキン',atkTypes:['ひこう','じめん','ほのお'],cat:'both',spd:120,bulk:'physHigh',note:'S120・B130・スカイスキン捨て身＆両刀大文字で受けを破壊'},
-  {id:'アーマーガア',rank:13,types:['ひこう','はがね'],ability:'ミラーアーマー',atkTypes:['ひこう','かくとう'],cat:'phys',spd:67,bulk:'physHigh',note:'物理アタッカー全般を鉄壁羽休め＋ゴツメで完封'},
-  {id:'マスカーニャ',rank:14,types:['くさ','あく'],ability:'へんげんじざい',atkTypes:['くさ','あく','フェアリー'],cat:'phys',spd:123,bulk:'low',note:'S123＋確定急所トリックフラワー＋はたきおとす'},
-  {id:'メガセグレイブ',rank:15,types:['ドラゴン','こおり'],ability:'ねつこうかん',atkTypes:['こおり','ドラゴン','じめん'],cat:'phys',spd:87,bulk:'physHigh',note:'A175の破壊力＋こおりのつぶて＋炎耐性・火傷無効'},
-  {id:'メガメタグロス',rank:16,types:['はがね','エスパー'],ability:'かたいツメ',atkTypes:['はがね','こおり','じめん','でんき'],cat:'phys',spd:110,bulk:'physHigh',note:'S110・高耐久・広範囲のかたいツメ物理技＋バレパン'},
-  {id:'ゴリランダー',rank:17,types:['くさ'],ability:'グラスメイカー',atkTypes:['くさ','あく','じめん'],cat:'phys',spd:85,bulk:'mid',note:'グラススライダー先制＋とんぼがえりの対面操作'},
-  {id:'メガフラエッテ',rank:24,types:['フェアリー'],ability:'フェアリーオーラ',atkTypes:['フェアリー','エスパー'],cat:'spec',spd:102,bulk:'spHigh',note:'フェアリーオーラ＋C155破滅の光/ムンフォの規格外特殊火力'},
-  {id:'イエッサン♂＋メガカメックス',rank:20,types:['みず'],ability:'メガランチャー',atkTypes:['みず','こおり','あく','かくとう'],cat:'spec',spd:130,bulk:'mid',note:'サイコフィールドで先制技を封じつつ殻を破る全抜き'},
-  {id:'ブラッキー',rank:21,types:['あく'],ability:'シンクロ',atkTypes:['あく'],cat:'phys',spd:65,bulk:'bothHigh',note:'超高耐久＋イカサマ・あくび・ねがいごとで物理や中途半端な火力を詰ませる'},
-  {id:'メガゲンガー',rank:22,types:['ゴースト','どく'],ability:'かげふみ',atkTypes:['ゴースト','どく','かくとう'],cat:'spec',spd:130,bulk:'low',note:'S130かげふみキャッチ＋道連れ/滅びの歌による1:1〜1:2交換'},
-  {id:'メガギャラドス',rank:19,types:['みず','あく'],ability:'かたやぶり',atkTypes:['みず','あく','じめん'],cat:'phys',spd:121,bulk:'spHigh',note:'型破り龍舞による特性無視の積み全抜き'},
-  {id:'ドヒドイデ',rank:47,types:['どく','みず'],ability:'さいせいりょく',atkTypes:['みず','どく'],cat:'phys',spd:35,bulk:'bothHigh',note:'再生力＋どくどく＋黒い霧で受けループの核となる'}
+const GENERAL_ITEMS = [
+  'きあいのタスキ','こだわりスカーフ','いのちのたま','たべのこし','オボンのみ','ラムのみ',
+  'ゴツゴツメット','ふうせん','レッドカード','だっしゅつボタン','ひかりのねんど','グランドコート',
+  'たつじんのおび','ちからのハチマキ','ものしりメガネ','しろいハーブ','メンタルハーブ',
+  'ピントレンズ','こうかくレンズ','フォーカスレンズ','メトロノーム','おおきなねっこ',
+  'くろいてっきゅう','きれいなぬけがら','しめつけバンド','ノーマルジュエル',
+  'エレキシード','グラスシード','サイコシード','ミストシード',
+  'あついいわ','しめったいわ','さらさらいわ','つめたいいわ',
+  'のろいのおふだ(1.2倍)','もくたん(1.2倍)','しんぴのしずく(1.2倍)','くろおび(1.2倍)','きせきのタネ(1.2倍)','ようせいのハネ(1.2倍)','メタルコート(1.2倍)','くろいメガネ(1.2倍)','まがったスプーン(1.2倍)','りゅうのキバ(1.2倍)','とけないこおり(1.2倍)','やわらかいすな(1.2倍)','じしゃく(1.2倍)','どくバリ(1.2倍)','するどいくちばし(1.2倍)','ぎんのこな(1.2倍)','かたいいし(1.2倍)','シルクのスカーフ(1.2倍)',
+  'シュカのみ(地面半減)','ヨプのみ(格闘半減)','リリバのみ(鋼半減)','オッカのみ(炎半減)','ヤチェのみ(氷半減)','ソクノのみ(電気半減)','ナモのみ(悪半減)','カシブのみ(霊半減)','ロゼルのみ(妖半減)','バコウのみ(飛行半減)','ウタンのみ(超半減)','ビアーのみ(毒半減)','イトケのみ(水半減)','リンドのみ(草半減)','ヨロギのみ(岩半減)','ハバンのみ(龍半減)'
+];
+const BERRY_RESIST = {
+  'シュカのみ(地面半減)':'じめん','ヨプのみ(格闘半減)':'かくとう','リリバのみ(鋼半減)':'はがね',
+  'オッカのみ(炎半減)':'ほのお','ヤチェのみ(氷半減)':'こおり','ソクノのみ(電気半減)':'でんき',
+  'ナモのみ(悪半減)':'あく','カシブのみ(霊半減)':'ゴースト','ロゼルのみ(妖半減)':'フェアリー',
+  'バコウのみ(飛行半減)':'ひこう','ウタンのみ(超半減)':'エスパー','ビアーのみ(毒半減)':'どく',
+  'イトケのみ(水半減)':'みず','リンドのみ(草半減)':'くさ','ヨロギのみ(岩半減)':'いわ','ハバンのみ(龍半減)':'ドラゴン'
+};
+const ROLES = [
+  '物理アタッカー','特殊アタッカー','両刀アタッカー','積みエース',
+  '物理受け','特殊受け','クッション・サイクル','起点作成・サポート'
 ];
 
-const ARCHETYPES=[
-  {name:'メガルカリオZ＋カイリュー対面（Tier 1）',core:['ルカリオ','ガブリアス','イダイトウ(オス)','カイリュー','ミミッキュ','マスカーニャ'],keyThreats:['メガルカリオZ','カイリュー(通常/メガ)','イダイトウ(オス)','ミミッキュ'],desc:'S151メガルカリオZの制圧力と行動保証で殴り勝つ対面構築。'},
-  {name:'カバマンダ＋サーフゴー（Tier 1）',core:['カバルドン','ボーマンダ','サーフゴー','オーロンゲ','ブリジュラス','イダイトウ(オス)'],keyThreats:['カバルドン','メガボーマンダ','サーフゴー','ブリジュラス'],desc:'カバルドンのステロ欠伸や壁からメガボーマンダを展開し、サーフゴーで受けを崩す王道構築。'},
-  {name:'晴れムシキング（M-7最終12位軸）',core:['ガラルヤドキング','グソクムシャ','ガブリアス','ブラッキー','サーフゴー','リザードン'],keyThreats:['メガグソクムシャ','メガリザードンY','ブラッキー','サーフゴー'],desc:'シュカヤドキングやブラッキーのサイクルと、メガグソクムシャ・メガリザYの2大エースを両立する構築。'},
-  {name:'メガフラエッテ＋メガガブリアスZ（上位構築）',core:['フラエッテ(永遠)','ガブリアス','カバルドン','ヒスイダイケンキ','ドヒドイデ','サーフゴー'],keyThreats:['メガフラエッテ','メガガブリアスZ','カバルドン','ドヒドイデ'],desc:'フェアリーオーラの超高火力とS151ガブZの高速展開を堅牢なサイクルで支える構築。'},
-  {name:'イエッサン♂＋メガカメックス展開（流行構築）',core:['イエッサン(オス)','カメックス','オオニューラ','ミミッキュ','ガブリアス','アーマーガア'],keyThreats:['イエッサン♂＋メガカメックス','ミミッキュ','メガガブリアスZ'],desc:'サイコフィールドで先制技を遮断し、殻を破るメガカメックスやオオニューラで全抜きを狙う構築。'}
-];
-
-const PRESETS={
-  lucarioZ:[{name:'ルカリオ',item:'ルカリオナイトZ',role:'特殊アタッカー'},{name:'ガブリアス',item:'きあいのタスキ',role:'物理アタッカー'},{name:'イダイトウ(オス)',item:'こだわりスカーフ',role:'物理アタッカー'},{name:'カイリュー',item:'ラムのみ',role:'積みエース'},{name:'ミミッキュ',item:'いのちのたま',role:'積みエース'},{name:'マスカーニャ',item:'くろいメガネ(1.2倍)',role:'物理アタッカー'}],
-  kabamanda:[{name:'カバルドン',item:'ゴツゴツメット',role:'クッション・サイクル'},{name:'ボーマンダ',item:'ボーマンダナイト',role:'積みエース'},{name:'サーフゴー',item:'ふうせん',role:'特殊アタッカー'},{name:'ブリジュラス',item:'きあいのタスキ',role:'特殊アタッカー'},{name:'イダイトウ(オス)',item:'こだわりスカーフ',role:'物理アタッカー'},{name:'アシレーヌ',item:'オボンのみ',role:'特殊アタッカー'}],
-  sunnyGuso:[{name:'ガラルヤドキング',item:'シュカのみ(地面半減)',role:'クッション・サイクル'},{name:'グソクムシャ',item:'グソクムシャナイト',role:'物理アタッカー'},{name:'ガブリアス',item:'きあいのタスキ',role:'物理アタッカー'},{name:'ブラッキー',item:'たべのこし',role:'物理受け'},{name:'サーフゴー',item:'ふうせん',role:'特殊アタッカー'},{name:'リザードン',item:'リザードナイトY',role:'特殊アタッカー'}],
-  floetteGab:[{name:'フラエッテ(永遠)',item:'フラエッテナイト',role:'特殊アタッカー'},{name:'ガブリアス',item:'ガブリアスナイトZ',role:'特殊アタッカー'},{name:'カバルドン',item:'オボンのみ',role:'クッション・サイクル'},{name:'ヒスイダイケンキ',item:'きあいのタスキ',role:'起点作成・サポート'},{name:'ドヒドイデ',item:'たべのこし',role:'物理受け'},{name:'サーフゴー',item:'こだわりスカーフ',role:'特殊アタッカー'}],
-  psychicBlastoise:[{name:'イエッサン(オス)',item:'こだわりスカーフ',role:'起点作成・サポート'},{name:'カメックス',item:'カメックスナイト',role:'積みエース'},{name:'オオニューラ',item:'サイコシード',role:'積みエース'},{name:'ミミッキュ',item:'いのちのたま',role:'積みエース'},{name:'カバルドン',item:'ゴツゴツメット',role:'クッション・サイクル'},{name:'サーフゴー',item:'ふうせん',role:'特殊アタッカー'}],
-  draft:[{name:'ガブリアス',item:'きあいのタスキ',role:'物理アタッカー'},{name:'カイリュー',item:'ラムのみ',role:'積みエース'},{name:'ボーマンダ',item:'ボーマンダナイト',role:'積みエース'},{name:'セグレイブ',item:'セグレイブナイト',role:'物理アタッカー'},{name:'マスカーニャ',item:'いのちのたま',role:'物理アタッカー'},{name:'エースバーン',item:'オボンのみ',role:'物理アタッカー'}]
+const POKEMON_DB = {
+  'ガブリアス': {
+    rank:1, types:['ドラゴン','じめん'], ability:'さめはだ', stats:[108,130,95,80,85,102],
+    defaultItem:'ガブリアスナイトZ', defaultRole:'特殊アタッカー',
+    off:['ドラゴン','じめん','いわ','ほのお'], tags:['sr','fast','steelCheck'],
+    megas:{
+      'ガブリアスナイトZ':{ name:'メガガブリアスZ', types:['ドラゴン'], ability:'ふゆう', stats:[108,130,85,141,85,151], defaultRole:'特殊アタッカー', off:['ドラゴン','じめん','ほのお','こおり'], tags:['s151','fast','wallbreak','steelCheck'] },
+      'ガブリアスナイト':{ name:'メガガブリアス', types:['ドラゴン','じめん'], ability:'すなのちから', stats:[108,170,115,120,95,92], defaultRole:'両刀アタッカー', off:['ドラゴン','じめん','ほのお','いわ'], tags:['wallbreak','steelCheck'] }
+    }
+  },
+  'アシレーヌ': { rank:2, types:['みず','フェアリー'], ability:'げきりゅう', stats:[80,74,74,126,116,60], defaultItem:'オボンのみ', defaultRole:'特殊アタッカー', off:['みず','フェアリー','こおり','ゴースト'], tags:['priority','spBulk','wallbreak'] },
+  'ミミッキュ': { rank:3, types:['ゴースト','フェアリー'], ability:'ばけのかわ', stats:[55,90,80,50,105,96], defaultItem:'いのちのたま', defaultRole:'積みエース', off:['ゴースト','フェアリー','くさ'], tags:['priority','antiSetup','stopper'] },
+  'カバルドン': { rank:4, types:['じめん'], ability:'すなおこし', stats:[108,112,118,68,72,47], defaultItem:'ゴツゴツメット', defaultRole:'クッション・サイクル', off:['じめん','いわ'], tags:['sr','phaze','physBulk','steelCheck'] },
+  'ブリジュラス': { rank:5, types:['はがね','ドラゴン'], ability:'じきゅうりょく', stats:[90,105,130,125,65,85], defaultItem:'きあいのタスキ', defaultRole:'特殊アタッカー', off:['はがね','ドラゴン','でんき','あく'], tags:['sr','physBulk','stopper'] },
+  'ルカリオ': {
+    rank:6, types:['かくとう','はがね'], ability:'せいしんりょく', stats:[70,110,70,115,70,90],
+    defaultItem:'ルカリオナイトZ', defaultRole:'特殊アタッカー', off:['かくとう','はがね','あく','ノーマル'], tags:['priority','steelCheck'],
+    megas:{
+      'ルカリオナイトZ':{ name:'メガルカリオZ', types:['かくとう','はがね'], ability:'はどうのぼうご', stats:[70,100,70,164,70,151], defaultRole:'特殊アタッカー', off:['かくとう','はがね','あく'], tags:['s151','fast','priority','wallbreak','steelCheck','contactResist'] },
+      'ルカリオナイト':{ name:'メガルカリオ', types:['かくとう','はがね'], ability:'てきおうりょく', stats:[70,145,88,140,70,112], defaultRole:'物理アタッカー', off:['かくとう','はがね','こおり','ノーマル'], tags:['fast','priority','wallbreak','steelCheck'] }
+    }
+  },
+  'リザードン': {
+    rank:7, types:['ほのお','ひこう'], ability:'もうか', stats:[78,84,78,109,85,100],
+    defaultItem:'リザードナイトY', defaultRole:'特殊アタッカー', off:['ほのお','くさ','ひこう','じめん'], tags:['steelCheck'],
+    megas:{
+      'リザードナイトY':{ name:'メガリザードンY', types:['ほのお','ひこう'], ability:'ひでり', stats:[78,104,78,159,115,100], defaultRole:'特殊アタッカー', off:['ほのお','くさ','じめん','ひこう'], tags:['wallbreak','steelCheck','weather','spBulk'] },
+      'リザードナイトX':{ name:'メガリザードンX', types:['ほのお','ドラゴン'], ability:'かたいツメ', stats:[78,130,111,130,85,100], defaultRole:'積みエース', off:['ほのお','ドラゴン','じめん'], tags:['wallbreak','steelCheck'] }
+    }
+  },
+  'グソクムシャ': {
+    rank:8, types:['むし','みず'], ability:'ききかいひ', stats:[75,125,140,60,90,40],
+    defaultItem:'グソクムシャナイト', defaultRole:'物理アタッカー', off:['むし','みず','かくとう','あく'], tags:['priority','physBulk'],
+    megas:{
+      'グソクムシャナイト':{ name:'メガグソクムシャ', types:['むし','はがね'], ability:'かたいツメ', stats:[75,150,175,70,120,40], defaultRole:'物理アタッカー', off:['むし','みず','かくとう','はがね','あく'], tags:['priority','physBulk','spBulk','wallbreak'] }
+    }
+  },
+  'イダイトウ(オス)': { rank:9, types:['みず','ゴースト'], ability:'てきおうりょく', stats:[120,112,65,80,75,78], defaultItem:'こだわりスカーフ', defaultRole:'物理アタッカー', off:['みず','ゴースト','こおり'], tags:['priority','stopper','wallbreak'] },
+  'カイリュー': {
+    rank:10, types:['ドラゴン','ひこう'], ability:'マルチスケイル', stats:[91,134,95,100,100,80],
+    defaultItem:'ラムのみ', defaultRole:'積みエース', off:['ドラゴン','ひこう','ノーマル','じめん','ほのお'], tags:['priority','stopper','steelCheck'],
+    megas:{
+      'カイリュナイト':{ name:'メガカイリュー', types:['ドラゴン','ひこう'], ability:'マルチスケイル', stats:[91,124,115,145,125,100], defaultRole:'特殊アタッカー', off:['ドラゴン','ひこう','ほのお','でんき'], tags:['stopper','spBulk','physBulk','steelCheck'] }
+    }
+  },
+  'サーフゴー': { rank:11, types:['はがね','ゴースト'], ability:'おうごんのからだ', stats:[87,60,95,133,91,84], defaultItem:'ふうせん', defaultRole:'特殊アタッカー', off:['はがね','ゴースト','かくとう','でんき'], tags:['antiStatus','wallbreak'] },
+  'ボーマンダ': {
+    rank:12, types:['ドラゴン','ひこう'], ability:'いかく', stats:[95,135,80,110,80,100],
+    defaultItem:'ボーマンダナイト', defaultRole:'積みエース', off:['ひこう','ドラゴン','じめん','ほのお'], tags:['fast'],
+    megas:{
+      'ボーマンダナイト':{ name:'メガボーマンダ', types:['ドラゴン','ひこう'], ability:'スカイスキン', stats:[95,145,130,120,90,120], defaultRole:'積みエース', off:['ひこう','じめん','ほのお','ドラゴン'], tags:['fast','physBulk','wallbreak','steelCheck'] }
+    }
+  },
+  'アーマーガア': { rank:13, types:['ひこう','はがね'], ability:'ミラーアーマー', stats:[98,87,105,53,85,67], defaultItem:'ゴツゴツメット', defaultRole:'物理受け', off:['ひこう','かくとう','むし'], tags:['physBulk','pivot'] },
+  'マスカーニャ': { rank:14, types:['くさ','あく'], ability:'へんげんじざい', stats:[76,110,70,81,70,123], defaultItem:'きあいのタスキ', defaultRole:'物理アタッカー', off:['くさ','あく','フェアリー','むし','どく'], tags:['fast','priority','pivot','stopper'] },
+  'セグレイブ': {
+    rank:15, types:['ドラゴン','こおり'], ability:'ねつこうかん', stats:[115,145,92,75,86,87],
+    defaultItem:'セグレイブナイト', defaultRole:'物理アタッカー', off:['こおり','ドラゴン','じめん'], tags:['priority','steelCheck'],
+    megas:{
+      'セグレイブナイト':{ name:'メガセグレイブ', types:['ドラゴン','こおり'], ability:'ねつこうかん', stats:[115,175,117,105,101,87], defaultRole:'物理アタッカー', off:['こおり','ドラゴン','じめん'], tags:['priority','wallbreak','physBulk','steelCheck'] }
+    }
+  },
+  'メタグロス': {
+    rank:16, types:['はがね','エスパー'], ability:'クリアボディ', stats:[80,135,130,95,90,70],
+    defaultItem:'メタグロスナイト', defaultRole:'物理アタッカー', off:['はがね','エスパー','こおり','じめん','でんき'], tags:['priority','physBulk'],
+    megas:{
+      'メタグロスナイト':{ name:'メガメタグロス', types:['はがね','エスパー'], ability:'かたいツメ', stats:[80,145,150,105,110,110], defaultRole:'物理アタッカー', off:['はがね','エスパー','こおり','じめん','でんき'], tags:['fast','priority','physBulk','steelCheck'] }
+    }
+  },
+  'ゴリランダー': { rank:17, types:['くさ'], ability:'グラスメイカー', stats:[100,125,90,60,70,85], defaultItem:'きせきのタネ(1.2倍)', defaultRole:'物理アタッカー', off:['くさ','あく','じめん','かくとう','むし'], tags:['priority','terrain','pivot'] },
+  'キラフロル': {
+    rank:18, types:['いわ','どく'], ability:'どくげしょう', stats:[83,55,90,130,81,86],
+    defaultItem:'きあいのタスキ', defaultRole:'起点作成・サポート', off:['いわ','どく','じめん','くさ'], tags:['sr','steelCheck'],
+    megas:{
+      'キラフロルナイト':{ name:'メガキラフロル', types:['いわ','どく'], ability:'てきおうりょく', stats:[83,90,105,150,96,101], defaultRole:'特殊アタッカー', off:['いわ','どく','じめん','くさ'], tags:['fast','wallbreak','steelCheck'] }
+    }
+  },
+  'ギャラドス': {
+    rank:19, types:['みず','ひこう'], ability:'いかく', stats:[95,125,79,60,100,81],
+    defaultItem:'ギャラドスナイト', defaultRole:'積みエース', off:['みず','ひこう','じめん','こおり'], tags:['spBulk'],
+    megas:{
+      'ギャラドスナイト':{ name:'メガギャラドス', types:['みず','あく'], ability:'かたやぶり', stats:[95,155,109,70,130,81], defaultRole:'積みエース', off:['みず','あく','じめん','こおり'], tags:['spBulk','physBulk','wallbreak','steelCheck'] }
+    }
+  },
+  'イエッサン(オス)': { rank:20, types:['エスパー','ノーマル'], ability:'サイコメイカー', stats:[60,65,55,105,95,95], defaultItem:'こだわりスカーフ', defaultRole:'起点作成・サポート', off:['エスパー','フェアリー','ほのお'], tags:['terrain','antiPriority'] },
+  'ブラッキー': { rank:21, types:['あく'], ability:'シンクロ', stats:[95,65,110,60,130,65], defaultItem:'たべのこし', defaultRole:'物理受け', off:['あく'], tags:['physBulk','spBulk'] },
+  'ゲンガー': {
+    rank:22, types:['ゴースト','どく'], ability:'のろわれボディ', stats:[60,65,60,130,75,110],
+    defaultItem:'ゲンガーナイト', defaultRole:'特殊アタッカー', off:['ゴースト','どく','かくとう','フェアリー'], tags:['fast'],
+    megas:{
+      'ゲンガーナイト':{ name:'メガゲンガー', types:['ゴースト','どく'], ability:'かげふみ', stats:[60,65,80,170,95,130], defaultRole:'特殊アタッカー', off:['ゴースト','どく','かくとう','フェアリー'], tags:['fast','wallbreak','trapper'] }
+    }
+  },
+  'パーモット': { rank:23, types:['でんき','かくとう'], ability:'てつのこぶし', stats:[70,115,70,70,60,105], defaultItem:'きあいのタスキ', defaultRole:'物理アタッカー', off:['でんき','かくとう','こおり'], tags:['fast','priority','revive','steelCheck'] },
+  'フラエッテ(永遠)': {
+    rank:24, types:['フェアリー'], ability:'フラワーベール', stats:[74,65,67,125,128,92],
+    defaultItem:'フラエッテナイト', defaultRole:'特殊アタッカー', off:['フェアリー','エスパー','くさ'], tags:['spBulk'],
+    megas:{
+      'フラエッテナイト':{ name:'メガフラエッテ', types:['フェアリー'], ability:'フェアリーオーラ', stats:[74,85,87,155,148,102], defaultRole:'特殊アタッカー', off:['フェアリー','エスパー','くさ'], tags:['fast','spBulk','wallbreak'] }
+    }
+  },
+  'エースバーン': { rank:25, types:['ほのお'], ability:'リベロ', stats:[80,116,75,65,75,119], defaultItem:'いのちのたま', defaultRole:'物理アタッカー', off:['ほのお','かくとう','あく','むし','どく'], tags:['fast','priority','pivot','steelCheck'] },
+  'ゲッコウガ': {
+    rank:26, types:['みず','あく'], ability:'へんげんじざい', stats:[72,95,67,103,71,122],
+    defaultItem:'ゲッコウガナイト', defaultRole:'特殊アタッカー', off:['みず','あく','こおり','くさ','どく'], tags:['fast','priority'],
+    megas:{
+      'ゲッコウガナイト':{ name:'メガゲッコウガ', types:['みず','あく'], ability:'へんげんじざい', stats:[72,125,77,133,81,142], defaultRole:'両刀アタッカー', off:['みず','あく','こおり','どく','くさ'], tags:['fast','priority','wallbreak'] }
+    }
+  },
+  'ギルガルド': { rank:27, types:['はがね','ゴースト'], ability:'バトルスイッチ', stats:[60,140,140,140,140,60], defaultItem:'たべのこし', defaultRole:'クッション・サイクル', off:['ゴースト','はがね','かくとう'], tags:['priority','physBulk','spBulk'] },
+  'ピクシー': {
+    rank:28, types:['フェアリー'], ability:'てんねん', stats:[95,70,73,95,90,60],
+    defaultItem:'たべのこし', defaultRole:'物理受け', off:['フェアリー','ほのお'], tags:['antiSetup','sr','physBulk'],
+    megas:{
+      'ピクシーナイト':{ name:'メガピクシー', types:['フェアリー','ひこう'], ability:'マジックミラー', stats:[95,80,93,135,110,70], defaultRole:'特殊アタッカー', off:['フェアリー','ほのお','ひこう'], tags:['antiStatus','spBulk'] }
+    }
+  },
+  'ヒスイダイケンキ': { rank:29, types:['みず','あく'], ability:'きれあじ', stats:[90,108,80,100,65,85], defaultItem:'きあいのタスキ', defaultRole:'起点作成・サポート', off:['みず','あく','むし','かくとう'], tags:['sr','priority'] },
+  'ドドゲザン': { rank:30, types:['あく','はがね'], ability:'そうだいしょう', stats:[100,135,120,60,85,50], defaultItem:'くろいメガネ(1.2倍)', defaultRole:'物理アタッカー', off:['あく','はがね','かくとう'], tags:['priority','physBulk','stopper'] },
+  'ウォッシュロトム': { rank:31, types:['でんき','みず'], ability:'ふゆう', stats:[50,65,107,105,107,86], defaultItem:'オボンのみ', defaultRole:'クッション・サイクル', off:['みず','でんき'], tags:['pivot','physBulk','spBulk'] },
+  'ウルガモス': { rank:32, types:['むし','ほのお'], ability:'ほのおのからだ', stats:[85,60,65,135,105,100], defaultItem:'オボンのみ', defaultRole:'積みエース', off:['ほのお','むし','くさ','エスパー'], tags:['wallbreak','steelCheck','spBulk'] },
+  'ヒートロトム': { rank:33, types:['でんき','ほのお'], ability:'ふゆう', stats:[50,65,107,105,107,86], defaultItem:'オボンのみ', defaultRole:'クッション・サイクル', off:['ほのお','でんき'], tags:['pivot','steelCheck','physBulk'] },
+  'バシャーモ': {
+    rank:34, types:['ほのお','かくとう'], ability:'かそく', stats:[80,120,70,110,70,80],
+    defaultItem:'バシャーモナイト', defaultRole:'積みエース', off:['ほのお','かくとう','じめん'], tags:['steelCheck','wallbreak'],
+    megas:{
+      'バシャーモナイト':{ name:'メガバシャーモ', types:['ほのお','かくとう'], ability:'かそく', stats:[80,160,80,130,80,100], defaultRole:'積みエース', off:['ほのお','かくとう','じめん'], tags:['fast','wallbreak','steelCheck'] }
+    }
+  },
+  'ライチュウ': {
+    rank:35, types:['でんき'], ability:'ひらいしん', stats:[60,90,55,90,80,110],
+    defaultItem:'ライチュウナイトY', defaultRole:'特殊アタッカー', off:['でんき','くさ','かくとう'], tags:['fast'],
+    megas:{
+      'ライチュウナイトY':{ name:'メガライチュウY', types:['でんき'], ability:'ノーガード', stats:[60,100,55,160,80,130], defaultRole:'特殊アタッカー', off:['でんき','くさ','かくとう'], tags:['fast','wallbreak'] },
+      'ライチュウナイトX':{ name:'メガライチュウX', types:['でんき'], ability:'エレキメイカー', stats:[60,135,95,95,85,115], defaultRole:'物理アタッカー', off:['でんき','かくとう','くさ'], tags:['fast','terrain'] }
+    }
+  },
+  'ムクホーク': {
+    rank:36, types:['ノーマル','ひこう'], ability:'いかく', stats:[85,120,70,50,60,100],
+    defaultItem:'ムクホークナイト', defaultRole:'物理アタッカー', off:['ひこう','かくとう','ほのお'], tags:['fast','steelCheck'],
+    megas:{
+      'ムクホークナイト':{ name:'メガムクホーク', types:['かくとう','ひこう'], ability:'あまのじゃく', stats:[85,140,100,60,90,110], defaultRole:'物理アタッカー', off:['かくとう','ひこう','ほのお'], tags:['fast','wallbreak','steelCheck'] }
+    }
+  },
+  'アローラキュウコン': { rank:37, types:['こおり','フェアリー'], ability:'ゆきふらし', stats:[73,67,75,81,100,109], defaultItem:'ひかりのねんど', defaultRole:'起点作成・サポート', off:['こおり','フェアリー'], tags:['fast','screen','weather'] },
+  'オオニューラ': { rank:38, types:['かくとう','どく'], ability:'かるわざ', stats:[80,130,60,40,80,120], defaultItem:'サイコシード', defaultRole:'積みエース', off:['かくとう','どく','ひこう','あく'], tags:['fast','steelCheck'] },
+  'ラグラージ': {
+    rank:39, types:['みず','じめん'], ability:'げきりゅう', stats:[100,110,90,85,90,60],
+    defaultItem:'オボンのみ', defaultRole:'クッション・サイクル', off:['みず','じめん'], tags:['sr','pivot','physBulk','steelCheck'],
+    megas:{
+      'ラグラージナイト':{ name:'メガラグラージ', types:['みず','じめん'], ability:'すいすい', stats:[100,150,110,95,110,70], defaultRole:'物理アタッカー', off:['みず','じめん','こおり'], tags:['physBulk','spBulk','steelCheck'] }
+    }
+  },
+  'サザンドラ': { rank:40, types:['あく','ドラゴン'], ability:'ふゆう', stats:[92,105,90,125,90,98], defaultItem:'こだわりスカーフ', defaultRole:'特殊アタッカー', off:['あく','ドラゴン','ほのお','じめん'], tags:['wallbreak','steelCheck','pivot'] },
+  'バンギラス': {
+    rank:41, types:['いわ','あく'], ability:'すなおこし', stats:[100,134,110,95,100,61],
+    defaultItem:'さらさらいわ', defaultRole:'クッション・サイクル', off:['いわ','あく','じめん','かくとう'], tags:['sr','spBulk','weather'],
+    megas:{
+      'バンギラスナイト':{ name:'メガバンギラス', types:['いわ','あく'], ability:'すなおこし', stats:[100,164,150,95,120,71], defaultRole:'積みエース', off:['いわ','あく','じめん','こおり'], tags:['physBulk','spBulk','weather'] }
+    }
+  },
+  'ハッサム': {
+    rank:42, types:['むし','はがね'], ability:'テクニシャン', stats:[70,130,100,55,80,65],
+    defaultItem:'ハッサムナイト', defaultRole:'物理アタッカー', off:['はがね','むし','かくとう','あく'], tags:['priority','pivot','physBulk'],
+    megas:{
+      'ハッサムナイト':{ name:'メガハッサム', types:['むし','はがね'], ability:'テクニシャン', stats:[70,150,140,65,100,75], defaultRole:'積みエース', off:['はがね','むし','かくとう','あく'], tags:['priority','pivot','physBulk'] }
+    }
+  },
+  'スターミー': {
+    rank:43, types:['みず','エスパー'], ability:'しぜんかいふく', stats:[60,75,85,100,85,115],
+    defaultItem:'スターミーナイト', defaultRole:'物理アタッカー', off:['みず','エスパー','こおり','でんき'], tags:['fast'],
+    megas:{
+      'スターミーナイト':{ name:'メガスターミー', types:['みず','エスパー'], ability:'ちからもち', stats:[60,100,105,130,105,120], defaultRole:'物理アタッカー', off:['みず','エスパー','かくとう','こおり'], tags:['fast','wallbreak','priority'] }
+    }
+  },
+  'カメックス': {
+    rank:44, types:['みず'], ability:'げきりゅう', stats:[79,83,100,85,105,78],
+    defaultItem:'カメックスナイト', defaultRole:'積みエース', off:['みず','あく','こおり','かくとう'], tags:['spBulk'],
+    megas:{
+      'カメックスナイト':{ name:'メガカメックス', types:['みず'], ability:'メガランチャー', stats:[79,103,120,135,115,78], defaultRole:'積みエース', off:['みず','あく','こおり','かくとう'], tags:['wallbreak','physBulk','spBulk'] }
+    }
+  },
+  'マフォクシー': {
+    rank:45, types:['ほのお','エスパー'], ability:'もうか', stats:[75,69,72,114,100,104],
+    defaultItem:'マフォクシナイト', defaultRole:'特殊アタッカー', off:['ほのお','エスパー','くさ','フェアリー'], tags:['fast','steelCheck'],
+    megas:{
+      'マフォクシナイト':{ name:'メガマフォクシー', types:['ほのお','エスパー'], ability:'ふゆう', stats:[75,69,72,159,125,134], defaultRole:'特殊アタッカー', off:['ほのお','エスパー','くさ','フェアリー'], tags:['fast','wallbreak','steelCheck','spBulk'] }
+    }
+  },
+  'ガラルヤドキング': { rank:46, types:['どく','エスパー'], ability:'さいせいりょく', stats:[95,65,80,110,110,30], defaultItem:'シュカのみ(地面半減)', defaultRole:'クッション・サイクル', off:['どく','エスパー','ほのお','こおり'], tags:['spBulk','pivot','trickRoom','steelCheck'] },
+  'ドヒドイデ': { rank:47, types:['どく','みず'], ability:'さいせいりょく', stats:[50,63,152,53,142,35], defaultItem:'たべのこし', defaultRole:'物理受け', off:['みず','どく'], tags:['physBulk','spBulk','antiSetup'] },
+  'ブリムオン': { rank:48, types:['エスパー','フェアリー'], ability:'マジックミラー', stats:[57,90,95,136,103,29], defaultItem:'オボンのみ', defaultRole:'起点作成・サポート', off:['エスパー','フェアリー','ほのお'], tags:['antiStatus','trickRoom','steelCheck'] },
+  'スコヴィラン': {
+    rank:49, types:['くさ','ほのお'], ability:'ようりょくそ', stats:[65,108,65,108,65,75],
+    defaultItem:'スコヴィランナイト', defaultRole:'特殊アタッカー', off:['くさ','ほのお'], tags:['steelCheck'],
+    megas:{
+      'スコヴィランナイト':{ name:'メガスコヴィラン', types:['くさ','ほのお'], ability:'とびだすハバネロ', stats:[65,138,85,138,85,75], defaultRole:'両刀アタッカー', off:['くさ','ほのお','あく'], tags:['wallbreak','steelCheck'] }
+    }
+  },
+  'オーロンゲ': { rank:50, types:['あく','フェアリー'], ability:'いたずらごころ', stats:[95,120,65,95,75,60], defaultItem:'ひかりのねんど', defaultRole:'起点作成・サポート', off:['フェアリー','あく'], tags:['screen','pivot'] },
+  'ラウドボーン': { rank:51, types:['ほのお','ゴースト'], ability:'てんねん', stats:[104,75,100,110,75,66], defaultItem:'たべのこし', defaultRole:'物理受け', off:['ほのお','ゴースト'], tags:['antiSetup','physBulk','steelCheck'] },
+  'ヒスイヌメルゴン': { rank:52, types:['はがね','ドラゴン'], ability:'そうしょく', stats:[80,100,100,110,150,60], defaultItem:'たべのこし', defaultRole:'特殊受け', off:['はがね','ドラゴン','ほのお','じめん'], tags:['spBulk','steelCheck'] },
+  'クチート': {
+    rank:53, types:['はがね','フェアリー'], ability:'いかく', stats:[50,85,85,55,55,50],
+    defaultItem:'クチートナイト', defaultRole:'物理アタッカー', off:['フェアリー','あく','ほのお','はがね'], tags:['priority','physBulk'],
+    megas:{
+      'クチートナイト':{ name:'メガクチート', types:['はがね','フェアリー'], ability:'ちからもち', stats:[50,105,125,55,95,50], defaultRole:'物理アタッカー', off:['フェアリー','あく','ほのお','はがね'], tags:['priority','wallbreak','physBulk'] }
+    }
+  },
+  'ソウブレイズ': { rank:54, types:['ほのお','ゴースト'], ability:'もらいび', stats:[75,125,80,60,100,85], defaultItem:'きあいのタスキ', defaultRole:'物理アタッカー', off:['ほのお','ゴースト','かくとう'], tags:['priority','steelCheck'] },
+  'エンペルト': { rank:55, types:['みず','はがね'], ability:'かちき', stats:[84,86,88,111,101,60], defaultItem:'オボンのみ', defaultRole:'特殊受け', off:['みず','はがね','こおり'], tags:['sr','spBulk','pivot'] },
+  'ペリッパー': { rank:56, types:['みず','ひこう'], ability:'あめふらし', stats:[60,50,100,95,70,65], defaultItem:'しめったいわ', defaultRole:'起点作成・サポート', off:['みず','ひこう'], tags:['weather','pivot'] },
+  'メタモン': { rank:57, types:['ノーマル'], ability:'かわりもの', stats:[48,48,48,48,48,48], defaultItem:'こだわりスカーフ', defaultRole:'クッション・サイクル', off:['ノーマル'], tags:['antiSetup','stopper'] },
+  'サーナイト': {
+    rank:58, types:['エスパー','フェアリー'], ability:'トレース', stats:[68,65,65,125,115,80],
+    defaultItem:'サーナイトナイト', defaultRole:'特殊アタッカー', off:['フェアリー','エスパー','ほのお','かくとう'], tags:['spBulk'],
+    megas:{
+      'サーナイトナイト':{ name:'メガサーナイト', types:['エスパー','フェアリー'], ability:'フェアリースキン', stats:[68,85,65,165,135,100], defaultRole:'特殊アタッカー', off:['フェアリー','エスパー','ほのお','かくとう'], tags:['wallbreak','spBulk','steelCheck'] }
+    }
+  },
+  'ドリュウズ': {
+    rank:61, types:['じめん','はがね'], ability:'かたやぶり', stats:[110,135,60,50,65,88],
+    defaultItem:'きあいのタスキ', defaultRole:'物理アタッカー', off:['じめん','はがね','いわ'], tags:['sr','steelCheck'],
+    megas:{
+      'ドリュウズナイト':{ name:'メガドリュウズ', types:['じめん','はがね'], ability:'すなかき', stats:[110,165,100,65,65,103], defaultRole:'物理アタッカー', off:['じめん','はがね','いわ'], tags:['fast','wallbreak','steelCheck'] }
+    }
+  },
+  'ジュペッタ': {
+    rank:62, types:['ゴースト'], ability:'おみとおし', stats:[64,115,65,83,63,65],
+    defaultItem:'ジュペッタナイト', defaultRole:'起点作成・サポート', off:['ゴースト','あく'], tags:['priority','stopper'],
+    megas:{
+      'ジュペッタナイト':{ name:'メガジュペッタ', types:['ゴースト'], ability:'いたずらごころ', stats:[64,165,75,93,83,75], defaultRole:'起点作成・サポート', off:['ゴースト','あく'], tags:['priority','stopper','antiSetup'] }
+    }
+  },
+  'クエスパトラ': { rank:63, types:['エスパー'], ability:'かそく', stats:[95,60,60,101,60,105], defaultItem:'オボンのみ', defaultRole:'積みエース', off:['エスパー','フェアリー'], tags:['fast','wallbreak'] },
+  'カビゴン': { rank:64, types:['ノーマル'], ability:'あついしぼう', stats:[160,110,65,65,110,30], defaultItem:'たべのこし', defaultRole:'特殊受け', off:['ノーマル','じめん','ほのお'], tags:['spBulk','steelCheck'] },
+  'アブソル': {
+    rank:68, types:['あく'], ability:'きょううん', stats:[65,130,60,75,60,75],
+    defaultItem:'アブソルナイトZ', defaultRole:'物理アタッカー', off:['あく','ゴースト','かくとう'], tags:['priority'],
+    megas:{
+      'アブソルナイトZ':{ name:'メガアブソルZ', types:['あく','ゴースト'], ability:'きれあじ', stats:[65,154,60,75,60,151], defaultRole:'物理アタッカー', off:['あく','ゴースト','かくとう'], tags:['s151','fast','priority','wallbreak'] }
+    }
+  },
+  'エアームド': {
+    rank:70, types:['はがね','ひこう'], ability:'がんじょう', stats:[65,80,140,40,70,70],
+    defaultItem:'ゴツゴツメット', defaultRole:'物理受け', off:['ひこう','じめん'], tags:['sr','phaze','physBulk'],
+    megas:{
+      'エアームドナイト':{ name:'メガエアームド', types:['はがね','ひこう'], ability:'すじがねいり', stats:[65,140,110,40,100,110], defaultRole:'積みエース', off:['ひこう','じめん'], tags:['fast','wallbreak'] }
+    }
+  },
+  'コノヨザル': { rank:72, types:['かくとう','ゴースト'], ability:'まけんき', stats:[110,115,80,50,90,90], defaultItem:'たべのこし', defaultRole:'積みエース', off:['ゴースト','かくとう'], tags:['wallbreak','steelCheck'] }
 };
 
-const STORAGE_KEY='pokechamp_mc_mobile_v1';
-let savedSlots=[JSON.parse(JSON.stringify(PRESETS.kabamanda)),JSON.parse(JSON.stringify(PRESETS.lucarioZ)),Array.from({length:6},()=>({name:'',item:'',role:'物理アタッカー'}))];
-let currentSlotIdx=0,threatFilter='all',toastTimer=null;
+const THREATS = [
+  { id:'メガガブリアスZ', rank:1, types:['ドラゴン'], ability:'ふゆう', atkTypes:['ドラゴン','じめん','ほのお'], cat:'spec', spd:151, bulk:'mid', note:'S151最速＆ふゆう。地面の一貫と高速特殊/両刀火力が危険' },
+  { id:'ガブリアス(タスキ/起点)', rank:1, types:['ドラゴン','じめん'], ability:'さめはだ', atkTypes:['じめん','ドラゴン','いわ'], cat:'phys', spd:102, bulk:'mid', note:'ステロ撒きor剣舞アタッカー。型判別が難しい' },
+  { id:'アシレーヌ', rank:2, types:['みず','フェアリー'], ability:'げきりゅう', atkTypes:['みず','フェアリー'], cat:'spec', spd:60, bulk:'spHigh', note:'水/妖の広い攻撃範囲と高い特防で対面性能が非常に高い' },
+  { id:'ミミッキュ', rank:3, types:['ゴースト','フェアリー'], ability:'ばけのかわ', atkTypes:['ゴースト','フェアリー'], cat:'phys', spd:96, bulk:'mid', note:'化けの皮で1回行動保証＋剣舞かげうちによるストッパー性能' },
+  { id:'カバルドン', rank:4, types:['じめん'], ability:'すなおこし', atkTypes:['じめん'], cat:'phys', spd:47, bulk:'physHigh', note:'ステロ＋あくび＋ゴツメ/吹き飛ばしで展開を阻害' },
+  { id:'ブリジュラス', rank:5, types:['はがね','ドラゴン'], ability:'じきゅうりょく', atkTypes:['はがね','ドラゴン','でんき'], cat:'spec', spd:85, bulk:'physHigh', note:'物理耐久と広い特殊技（流星群・ラスカノ・エレクトロビーム等）' },
+  { id:'メガルカリオZ', rank:6, types:['かくとう','はがね'], ability:'はどうのぼうご', atkTypes:['かくとう','はがね','あく'], cat:'spec', spd:151, bulk:'contact', note:'S151＋C164＋接触技半減。先制接触技での縛りが効きにくい' },
+  { id:'メガリザードンY', rank:7, types:['ほのお','ひこう'], ability:'ひでり', atkTypes:['ほのお','くさ','じめん'], cat:'spec', spd:100, bulk:'spHigh', note:'晴れ下C159の超高火力炎＋ソラビで水受けすら破壊' },
+  { id:'メガグソクムシャ', rank:8, types:['むし','はがね'], ability:'かたいツメ', atkTypes:['むし','みず','はがね','かくとう'], cat:'phys', spd:40, bulk:'physHigh', note:'B175/D120の要塞耐久＋かたいツメであいがしら・ビルドアップ' },
+  { id:'イダイトウ(オス)', rank:9, types:['みず','ゴースト'], ability:'てきおうりょく', atkTypes:['みず','ゴースト'], cat:'phys', spd:117, bulk:'mid', note:'スカーフお墓参り＋ウェーブタックルの終盤スイープ力' },
+  { id:'カイリュー(通常/メガ)', rank:10, types:['ドラゴン','ひこう'], ability:'マルチスケイル', atkTypes:['ドラゴン','ひこう','ノーマル','じめん'], cat:'both', spd:100, bulk:'multi', note:'マルスケ行動保証＋龍舞神速や高火力特殊メガの型誤認' },
+  { id:'サーフゴー', rank:11, types:['はがね','ゴースト'], ability:'おうごんのからだ', atkTypes:['はがね','ゴースト'], cat:'spec', spd:84, bulk:'mid', note:'変化技無効＋風船による地面透かし＋ゴールドラッシュの崩し' },
+  { id:'メガボーマンダ', rank:12, types:['ドラゴン','ひこう'], ability:'スカイスキン', atkTypes:['ひこう','じめん','ほのお'], cat:'both', spd:120, bulk:'physHigh', note:'S120・B130・スカイスキン捨て身＆両刀大文字で受けを破壊' },
+  { id:'アーマーガア', rank:13, types:['ひこう','はがね'], ability:'ミラーアーマー', atkTypes:['ひこう','かくとう'], cat:'phys', spd:67, bulk:'physHigh', note:'物理アタッカー全般を鉄壁羽休め＋ゴツメで完封' },
+  { id:'マスカーニャ', rank:14, types:['くさ','あく'], ability:'へんげんじざい', atkTypes:['くさ','あく','フェアリー'], cat:'phys', spd:123, bulk:'low', note:'S123＋確定急所トリックフラワー＋はたきおとす' },
+  { id:'メガセグレイブ', rank:15, types:['ドラゴン','こおり'], ability:'ねつこうかん', atkTypes:['こおり','ドラゴン','じめん'], cat:'phys', spd:87, bulk:'physHigh', note:'A175の破壊力＋こおりのつぶて＋炎耐性・火傷無効' },
+  { id:'メガメタグロス', rank:16, types:['はがね','エスパー'], ability:'かたいツメ', atkTypes:['はがね','こおり','じめん','でんき'], cat:'phys', spd:110, bulk:'physHigh', note:'S110・高耐久・広範囲のかたいツメ物理技＋バレパン' },
+  { id:'ゴリランダー', rank:17, types:['くさ'], ability:'グラスメイカー', atkTypes:['くさ','あく','じめん'], cat:'phys', spd:85, bulk:'mid', note:'グラススライダー先制＋とんぼがえりの対面操作' },
+  { id:'メガフラエッテ', rank:24, types:['フェアリー'], ability:'フェアリーオーラ', atkTypes:['フェアリー','エスパー'], cat:'spec', spd:102, bulk:'spHigh', note:'フェアリーオーラ＋C155破滅の光/ムンフォの規格外特殊火力' },
+  { id:'イエッサン♂＋メガカメックス', rank:20, types:['みず'], ability:'メガランチャー', atkTypes:['みず','こおり','あく','かくとう'], cat:'spec', spd:130, bulk:'mid', note:'サイコフィールドで先制技を封じつつ殻を破る全抜き' },
+  { id:'ブラッキー', rank:21, types:['あく'], ability:'シンクロ', atkTypes:['あく'], cat:'phys', spd:65, bulk:'bothHigh', note:'超高耐久＋イカサマ・あくび・ねがいごとで物理や中途半端な火力を詰ませる' },
+  { id:'メガゲンガー', rank:22, types:['ゴースト','どく'], ability:'かげふみ', atkTypes:['ゴースト','どく','かくとう'], cat:'spec', spd:130, bulk:'low', note:'S130かげふみキャッチ＋道連れ/滅びの歌による1:1〜1:2交換' },
+  { id:'メガギャラドス', rank:19, types:['みず','あく'], ability:'かたやぶり', atkTypes:['みず','あく','じめん'], cat:'phys', spd:121, bulk:'spHigh', note:'型破り龍舞による特性無視の積み全抜き' },
+  { id:'ドヒドイデ', rank:47, types:['どく','みず'], ability:'さいせいりょく', atkTypes:['みず','どく'], cat:'phys', spd:35, bulk:'bothHigh', note:'再生力＋どくどく＋黒い霧で受けループの核となる' }
+];
 
-function loadStorage(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;const o=JSON.parse(raw);if(Array.isArray(o.slots)&&o.slots.length===3)savedSlots=o.slots;if(typeof o.current==='number'&&o.current>=0&&o.current<3)currentSlotIdx=o.current;}catch(e){}}
-function saveStorage(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({slots:savedSlots,current:currentSlotIdx}));}catch(e){}}
-function getParty(){return savedSlots[currentSlotIdx];}
-function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2000);}
-function switchTab(id){['edit','diag','threat','matrix'].forEach(t=>{document.getElementById('tab-'+t).classList.toggle('active',t===id);document.getElementById('tabBtn-'+t).classList.toggle('active',t===id);});window.scrollTo({top:0,behavior:'smooth'});}
-function selectSaveSlot(idx){currentSlotIdx=idx;[0,1,2].forEach(i=>document.getElementById('saveBtn-'+i).classList.toggle('active',i===idx));saveStorage();renderAll();showToast('構築'+['A','B','C'][idx]+'に切り替えました');}
-function setThreatFilter(f){threatFilter=f;['all','severe','warn'].forEach(k=>document.getElementById('thFilt-'+k).classList.toggle('active',k===f));renderResults();}
+const ARCHETYPES = [
+  { name:'メガルカリオZ＋カイリュー対面（Tier 1）', core:['ルカリオ','ガブリアス','イダイトウ(オス)','カイリュー','ミミッキュ','マスカーニャ'], keyThreats:['メガルカリオZ','カイリュー(通常/メガ)','イダイトウ(オス)','ミミッキュ'], desc:'S151メガルカリオZの制圧力と行動保証（マルスケ・化けの皮・タスキ・スカーフ）で殴り勝つ対面構築。' },
+  { name:'カバマンダ＋サーフゴー（Tier 1）', core:['カバルドン','ボーマンダ','サーフゴー','オーロンゲ','ブリジュラス','イダイトウ(オス)'], keyThreats:['カバルドン','メガボーマンダ','サーフゴー','ブリジュラス'], desc:'カバルドンのステロ欠伸や壁からメガボーマンダを展開し、サーフゴーで変化技・受けを崩す王道構築。' },
+  { name:'晴れムシキング（M-7最終12位軸）', core:['ガラルヤドキング','グソクムシャ','ガブリアス','ブラッキー','サーフゴー','リザードン'], keyThreats:['メガグソクムシャ','メガリザードンY','ブラッキー','サーフゴー'], desc:'シュカヤドキングやブラッキーのサイクルと、メガグソクムシャ・メガリザYの2大エースを両立する攻守自在構築。' },
+  { name:'メガフラエッテ＋メガガブリアスZ（上位構築）', core:['フラエッテ(永遠)','ガブリアス','カバルドン','ヒスイダイケンキ','ドヒドイデ','サーフゴー'], keyThreats:['メガフラエッテ','メガガブリアスZ','カバルドン','ドヒドイデ'], desc:'フェアリーオーラの超高火力とS151ガブZの高速展開を、カバ・ドヒド・サフゴの堅牢なサイクルで支える構築。' },
+  { name:'イエッサン♂＋メガカメックス展開（流行構築）', core:['イエッサン(オス)','カメックス','オオニューラ','ミミッキュ','ガブリアス','アーマーガア'], keyThreats:['イエッサン♂＋メガカメックス','ミミッキュ','メガガブリアスZ'], desc:'サイコフィールドで先制技を遮断し、メガカメックスの殻を破るやサイコシードオオニューラで全抜きを狙う展開構築。' }
+];
 
-function resolveMember(slot){
-  if(!slot||!slot.name||!POKEMON_DB[slot.name])return null;
-  const b=POKEMON_DB[slot.name],mg=b.megas&&b.megas[slot.item]?b.megas[slot.item]:null;
-  const d=mg?{baseName:slot.name,displayName:mg.name,isMega:true,rank:b.rank,types:mg.types,ability:mg.ability,stats:mg.stats,off:mg.off,tags:mg.tags}:{baseName:slot.name,displayName:slot.name,isMega:false,rank:b.rank,types:b.types,ability:b.ability,stats:b.stats,off:b.off,tags:b.tags};
-  return {...d,item:slot.item,role:slot.role};
+const PRESETS = {
+  lucarioZ: [
+    { name:'ルカリオ', item:'ルカリオナイトZ', role:'特殊アタッカー' },
+    { name:'ガブリアス', item:'きあいのタスキ', role:'物理アタッカー' },
+    { name:'イダイトウ(オス)', item:'こだわりスカーフ', role:'物理アタッカー' },
+    { name:'カイリュー', item:'ラムのみ', role:'積みエース' },
+    { name:'ミミッキュ', item:'いのちのたま', role:'積みエース' },
+    { name:'マスカーニャ', item:'くろいメガネ(1.2倍)', role:'物理アタッカー' }
+  ],
+  kabamanda: [
+    { name:'カバルドン', item:'ゴツゴツメット', role:'クッション・サイクル' },
+    { name:'ボーマンダ', item:'ボーマンダナイト', role:'積みエース' },
+    { name:'サーフゴー', item:'ふうせん', role:'特殊アタッカー' },
+    { name:'ブリジュラス', item:'きあいのタスキ', role:'特殊アタッカー' },
+    { name:'イダイトウ(オス)', item:'こだわりスカーフ', role:'物理アタッカー' },
+    { name:'アシレーヌ', item:'オボンのみ', role:'特殊アタッカー' }
+  ],
+  sunnyGuso: [
+    { name:'ガラルヤドキング', item:'シュカのみ(地面半減)', role:'クッション・サイクル' },
+    { name:'グソクムシャ', item:'グソクムシャナイト', role:'物理アタッカー' },
+    { name:'ガブリアス', item:'きあいのタスキ', role:'物理アタッカー' },
+    { name:'ブラッキー', item:'たべのこし', role:'物理受け' },
+    { name:'サーフゴー', item:'ふうせん', role:'特殊アタッカー' },
+    { name:'リザードン', item:'リザードナイトY', role:'特殊アタッカー' }
+  ],
+  floetteGab: [
+    { name:'フラエッテ(永遠)', item:'フラエッテナイト', role:'特殊アタッカー' },
+    { name:'ガブリアス', item:'ガブリアスナイトZ', role:'特殊アタッカー' },
+    { name:'カバルドン', item:'オボンのみ', role:'クッション・サイクル' },
+    { name:'ヒスイダイケンキ', item:'きあいのタスキ', role:'起点作成・サポート' },
+    { name:'ドヒドイデ', item:'たべのこし', role:'物理受け' },
+    { name:'サーフゴー', item:'こだわりスカーフ', role:'特殊アタッカー' }
+  ],
+  psychicBlastoise: [
+    { name:'イエッサン(オス)', item:'こだわりスカーフ', role:'起点作成・サポート' },
+    { name:'カメックス', item:'カメックスナイト', role:'積みエース' },
+    { name:'オオニューラ', item:'サイコシード', role:'積みエース' },
+    { name:'ミミッキュ', item:'いのちのたま', role:'積みエース' },
+    { name:'カバルドン', item:'ゴツゴツメット', role:'クッション・サイクル' },
+    { name:'サーフゴー', item:'ふうせん', role:'特殊アタッカー' }
+  ],
+  draft: [
+    { name:'ガブリアス', item:'きあいのタスキ', role:'物理アタッカー' },
+    { name:'カイリュー', item:'ラムのみ', role:'積みエース' },
+    { name:'ボーマンダ', item:'ボーマンダナイト', role:'積みエース' },
+    { name:'セグレイブ', item:'セグレイブナイト', role:'物理アタッカー' },
+    { name:'マスカーニャ', item:'いのちのたま', role:'物理アタッカー' },
+    { name:'エースバーン', item:'オボンのみ', role:'物理アタッカー' }
+  ]
+};
+
+// =========================================================
+// State & LocalStorage Auto-Save (構築A / B / C)
+// =========================================================
+const STORAGE_KEY = 'pokechamp_mc_mobile_v1';
+let savedSlots = [
+  JSON.parse(JSON.stringify(PRESETS.kabamanda)),
+  JSON.parse(JSON.stringify(PRESETS.lucarioZ)),
+  Array.from({length:6}, () => ({ name:'', item:'', role:'物理アタッカー' }))
+];
+let currentSlotIdx = 0;
+let threatFilter = 'all';
+
+function loadStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const obj = JSON.parse(raw);
+    if (Array.isArray(obj.slots) && obj.slots.length === 3) savedSlots = obj.slots;
+    if (typeof obj.current === 'number' && obj.current >= 0 && obj.current < 3) currentSlotIdx = obj.current;
+  } catch (e) {}
 }
-function effectiveDefMult(m,at){
-  let v=typeEff(at,m.types);
-  if(at==='じめん'&&(m.ability==='ふゆう'||m.item==='ふうせん'))return 0;
-  if(at==='ほのお'&&m.ability==='もらいび')return 0;
-  if(at==='ほのお'&&m.ability==='ねつこうかん')return 0.25;
-  if((at==='ほのお'||at==='こおり')&&m.ability==='あついしぼう')v*=0.5;
-  if(at==='くさ'&&m.ability==='そうしょく')return 0;
-  if(at==='でんき'&&m.ability==='ひらいしん')return 0;
-  if(BERRY_RESIST[m.item]===at&&v>=2)v*=0.5;
-  return v;
+function saveStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ slots: savedSlots, current: currentSlotIdx }));
+  } catch (e) {}
 }
-function getEffectiveSpeed(m){return m.item==='こだわりスカーフ'?Math.round(m.stats[5]*1.5):m.stats[5];}
-function getItemsForPokemon(n){const b=POKEMON_DB[n];return [...(b&&b.megas?Object.keys(b.megas):[]),...GENERAL_ITEMS];}
+function getParty() { return savedSlots[currentSlotIdx]; }
 
-function renderPartyEditor(){
-  const grid=document.getElementById('partyGrid');grid.innerHTML='';
-  const names=Object.keys(POKEMON_DB).sort((a,b)=>POKEMON_DB[a].rank-POKEMON_DB[b].rank);
-  getParty().forEach((slot,idx)=>{
-    const m=resolveMember(slot),items=getItemsForPokemon(slot.name),div=document.createElement('div');
-    div.className='slot'+(m&&m.isMega?' mega-active':'');
-    const pokeOpts='<option value="">-- 未選択 --</option>'+names.map(n=>{const p=POKEMON_DB[n];return `<option value="${n}" ${slot.name===n?'selected':''}>${p.rank}位 ${n} (${p.types.join('/')})${p.megas?' ★メガ':''}</option>`;}).join('');
-    const itemOpts=items.map(it=>`<option value="${it}" ${slot.item===it?'selected':''}>${POKEMON_DB[slot.name]?.megas?.[it]?'💎 '+it:it}</option>`).join('');
-    const roleOpts=ROLES.map(r=>`<option value="${r}" ${slot.role===r?'selected':''}>${r}</option>`).join('');
-    const meta=m?`<div class="slot-meta">${m.isMega?`<span class="mega-tag">MEGA: ${m.displayName}</span>`:''}${m.types.map(t=>`<span class="type-badge" style="background:${TYPE_COLOR[t]}">${t}</span>`).join('')}<span class="rank-tag">${m.rank}位</span><span class="rank-tag">${m.ability}</span><span class="rank-tag">S${m.stats[5]}${m.item==='こだわりスカーフ'?'(拘)':''}</span></div>`:`<div class="slot-meta">ポケモンを選択してください</div>`;
-    div.innerHTML=`<div class="slot-head"><strong>SLOT ${idx+1}</strong><button class="btn btn-sm" onclick="clearSlot(${idx})">外す</button></div><div style="margin-bottom:7px;"><select onchange="onPokeChange(${idx},this.value)">${pokeOpts}</select></div><div class="slot-row"><select onchange="onItemChange(${idx},this.value)" ${!slot.name?'disabled':''}>${itemOpts}</select><select onchange="onRoleChange(${idx},this.value)" ${!slot.name?'disabled':''}>${roleOpts}</select></div>${meta}`;
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function switchTab(id) {
+  ['edit','diag','threat','matrix'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === id);
+    document.getElementById('tabBtn-' + t).classList.toggle('active', t === id);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function selectSaveSlot(idx) {
+  currentSlotIdx = idx;
+  [0,1,2].forEach(i => document.getElementById('saveBtn-' + i).classList.toggle('active', i === idx));
+  saveStorage();
+  renderAll();
+  showToast(`構築${['A','B','C'][idx]}に切り替えました`);
+}
+
+function setThreatFilter(f) {
+  threatFilter = f;
+  ['all','severe','warn'].forEach(k => document.getElementById('thFilt-' + k).classList.toggle('active', k === f));
+  renderResults();
+}
+
+// =========================================================
+// Helpers & Analysis Engine
+// =========================================================
+function resolveMember(slot) {
+  if (!slot || !slot.name || !POKEMON_DB[slot.name]) return null;
+  const base = POKEMON_DB[slot.name];
+  const mega = base.megas && base.megas[slot.item] ? base.megas[slot.item] : null;
+  const data = mega ? {
+    baseName: slot.name, displayName: mega.name, isMega: true, rank: base.rank,
+    types: mega.types, ability: mega.ability, stats: mega.stats, off: mega.off, tags: mega.tags
+  } : {
+    baseName: slot.name, displayName: slot.name, isMega: false, rank: base.rank,
+    types: base.types, ability: base.ability, stats: base.stats, off: base.off, tags: base.tags
+  };
+  return { ...data, item: slot.item, role: slot.role };
+}
+
+function effectiveDefMult(member, atkType) {
+  let m = typeEff(atkType, member.types);
+  if (atkType === 'じめん' && (member.ability === 'ふゆう' || member.item === 'ふうせん')) return 0;
+  if (atkType === 'ほのお' && member.ability === 'もらいび') return 0;
+  if (atkType === 'ほのお' && member.ability === 'ねつこうかん') return 0.25;
+  if ((atkType === 'ほのお' || atkType === 'こおり') && member.ability === 'あついしぼう') m *= 0.5;
+  if (atkType === 'くさ' && member.ability === 'そうしょく') return 0;
+  if (atkType === 'でんき' && member.ability === 'ひらいしん') return 0;
+  if (BERRY_RESIST[member.item] === atkType && m >= 2) m *= 0.5;
+  return m;
+}
+function getEffectiveSpeed(m) {
+  let s = m.stats[5];
+  if (m.item === 'こだわりスカーフ') s = Math.round(s * 1.5);
+  return s;
+}
+
+function getItemsForPokemon(pokeName) {
+  const base = POKEMON_DB[pokeName];
+  const megas = base && base.megas ? Object.keys(base.megas) : [];
+  return [...megas, ...GENERAL_ITEMS];
+}
+
+function renderPartyEditor() {
+  const grid = document.getElementById('partyGrid');
+  grid.innerHTML = '';
+  const pokeNames = Object.keys(POKEMON_DB).sort((a,b) => POKEMON_DB[a].rank - POKEMON_DB[b].rank);
+  const party = getParty();
+
+  party.forEach((slot, idx) => {
+    const m = resolveMember(slot);
+    const items = getItemsForPokemon(slot.name);
+    const div = document.createElement('div');
+    div.className = 'slot' + (m && m.isMega ? ' mega-active' : '');
+
+    const pokeOpts = `<option value="">-- 未選択 --</option>` + pokeNames.map(n => {
+      const p = POKEMON_DB[n];
+      return `<option value="${n}" ${slot.name===n?'selected':''}>${p.rank}位 ${n} (${p.types.join('/')})${p.megas?' ★メガ':''}</option>`;
+    }).join('');
+    const itemOpts = items.map(it => {
+      const isMegaStone = POKEMON_DB[slot.name]?.megas?.[it];
+      return `<option value="${it}" ${slot.item===it?'selected':''}>${isMegaStone?'💎 '+it:it}</option>`;
+    }).join('');
+    const roleOpts = ROLES.map(r => `<option value="${r}" ${slot.role===r?'selected':''}>${r}</option>`).join('');
+
+    const metaHtml = m ? `
+      <div class="slot-meta">
+        ${m.isMega ? `<span class="mega-tag">MEGA: ${m.displayName}</span>` : ''}
+        ${m.types.map(t => `<span class="type-badge" style="background:${TYPE_COLOR[t]}">${t}</span>`).join('')}
+        <span class="rank-tag">${m.rank}位</span>
+        <span class="rank-tag">${m.ability}</span>
+        <span class="rank-tag">S${m.stats[5]}${m.item==='こだわりスカーフ'?'(拘)':''}</span>
+      </div>` : `<div class="slot-meta">ポケモンを選択してください</div>`;
+
+    div.innerHTML = `
+      <div class="slot-head">
+        <strong>SLOT ${idx+1}</strong>
+        <button class="btn btn-sm" onclick="clearSlot(${idx})">外す</button>
+      </div>
+      <div style="margin-bottom:7px;">
+        <select onchange="onPokeChange(${idx}, this.value)">${pokeOpts}</select>
+      </div>
+      <div class="slot-row">
+        <select onchange="onItemChange(${idx}, this.value)" ${!slot.name?'disabled':''}>${itemOpts}</select>
+        <select onchange="onRoleChange(${idx}, this.value)" ${!slot.name?'disabled':''}>${roleOpts}</select>
+      </div>
+      ${metaHtml}
+    `;
     grid.appendChild(div);
   });
 }
-function onPokeChange(i,n){const p=getParty();p[i]=n?{name:n,item:POKEMON_DB[n].defaultItem,role:POKEMON_DB[n].defaultRole}:{name:'',item:'',role:'物理アタッカー'};saveStorage();renderAll();}
-function onItemChange(i,it){const p=getParty();p[i].item=it;const r=POKEMON_DB[p[i].name]?.megas?.[it]?.defaultRole;if(r)p[i].role=r;saveStorage();renderAll();}
-function onRoleChange(i,r){getParty()[i].role=r;saveStorage();renderAll();}
-function clearSlot(i){getParty()[i]={name:'',item:'',role:'物理アタッカー'};saveStorage();renderAll();}
-function loadPreset(k){savedSlots[currentSlotIdx]=JSON.parse(JSON.stringify(PRESETS[k]));saveStorage();renderAll();showToast('サンプル構築を読み込みました');}
-function clearParty(){savedSlots[currentSlotIdx]=Array.from({length:6},()=>({name:'',item:'',role:'物理アタッカー'}));saveStorage();renderAll();showToast('構築をリセットしました');}
-function copyPartyText(){
-  const text=getParty().map((s,i)=>{const m=resolveMember(s);return m?`${i+1}. ${m.displayName} @ ${m.item} [${m.role}]`:`${i+1}. (未設定)`;}).join('\n');
-  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(()=>showToast('コピーしました！')).catch(()=>fallbackCopy(text));
-  else fallbackCopy(text);
-}
-function fallbackCopy(t){const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showToast('コピーしました！');}catch(e){showToast('コピー失敗');}document.body.removeChild(ta);}
 
-function evaluateThreat(members,th){
-  let best=-10,sec=-10,counters=[];
-  for(const m of members){
-    let sc=0,wd=0;
-    for(const at of th.atkTypes){const e=effectiveDefMult(m,at);if(e>wd)wd=e;}
-    sc+=wd<=0.5?4:wd===1?1.5:wd===2?-2:-4;
-    if(th.cat==='phys'&&(m.tags.includes('physBulk')||m.role==='物理受け'))sc+=2.2;
-    if(th.cat==='spec'&&(m.tags.includes('spBulk')||m.role==='特殊受け'))sc+=2.2;
-    if(m.ability==='ばけのかわ'||m.ability==='マルチスケイル'||m.item==='きあいのタスキ')sc+=1.6;
-    if(m.ability==='てんねん'&&(th.id.includes('カイリュー')||th.id.includes('ギャラドス')||th.id.includes('カメックス')||th.id.includes('ミミッキュ')))sc+=3;
-    let bo=0;
-    for(const ot of m.off){let e=typeEff(ot,th.types);if(ot==='じめん'&&th.ability==='ふゆう')e=0;if(ot==='ほのお'&&th.ability==='ねつこうかん')e=0.25;if(e>bo)bo=e;}
-    sc+=bo>=4?3.5:bo>=2?2.2:bo>=1?0.5:-2;
-    const isSp=(m.role==='特殊アタッカー'||m.role==='両刀アタッカー'||m.stats[3]>=120);
-    const isPh=(m.role==='物理アタッカー'||m.role==='積みエース'||m.stats[1]>=120);
-    if(th.bulk==='physHigh'&&isSp)sc+=1.8;
-    if(th.bulk==='physHigh'&&!isSp&&bo<2)sc-=1.8;
-    if(th.bulk==='spHigh'&&isPh)sc+=1.5;
-    if(th.bulk==='bothHigh'&&m.tags.includes('wallbreak'))sc+=1.8;
-    if(th.bulk==='contact'&&isPh&&!m.off.includes('じめん'))sc-=1.5;
-    if(getEffectiveSpeed(m)>th.spd)sc+=1.8;
-    else if(m.tags.includes('priority')&&!th.id.includes('イエッサン'))sc+=1.2;
-    if(th.id==='サーフゴー'&&(m.role==='起点作成・サポート'||m.role==='物理受け')&&!m.off.includes('ほのお')&&!m.off.includes('じめん')&&!m.off.includes('ゴースト')&&!m.off.includes('あく'))sc-=2.5;
-    if(th.id==='イエッサン♂＋メガカメックス'&&(m.tags.includes('terrain')||m.ability==='かわりもの'||m.ability==='てんねん'))sc+=2.5;
-    if(th.id==='カバルドン'&&(m.tags.includes('antiStatus')||m.item==='ラムのみ'))sc+=2.2;
-    if(sc>=4.2)counters.push(m.displayName);
-    if(sc>best){sec=best;best=sc;}else if(sc>sec)sec=sc;
+function onPokeChange(idx, name) {
+  const party = getParty();
+  if (!name) party[idx] = { name:'', item:'', role:'物理アタッカー' };
+  else {
+    const p = POKEMON_DB[name];
+    party[idx] = { name, item: p.defaultItem, role: p.defaultRole };
   }
-  const comb=best*0.65+sec*0.35;
-  const level=(best<3.6||comb<2.4)?'severe':(best<5.2||comb<4.0)?'caution':'ok';
-  return {threat:th,level,bestScore:best,combined:comb,counters};
+  saveStorage();
+  renderAll();
+}
+function onItemChange(idx, item) {
+  const party = getParty();
+  party[idx].item = item;
+  const p = POKEMON_DB[party[idx].name];
+  if (p?.megas?.[item]?.defaultRole) party[idx].role = p.megas[item].defaultRole;
+  saveStorage();
+  renderAll();
+}
+function onRoleChange(idx, role) {
+  getParty()[idx].role = role;
+  saveStorage();
+  renderAll();
+}
+function clearSlot(idx) {
+  getParty()[idx] = { name:'', item:'', role:'物理アタッカー' };
+  saveStorage();
+  renderAll();
+}
+function loadPreset(key) {
+  savedSlots[currentSlotIdx] = JSON.parse(JSON.stringify(PRESETS[key]));
+  saveStorage();
+  renderAll();
+  showToast('サンプル構築を読み込みました');
+}
+function clearParty() {
+  savedSlots[currentSlotIdx] = Array.from({length:6}, () => ({ name:'', item:'', role:'物理アタッカー' }));
+  saveStorage();
+  renderAll();
+  showToast('構築をリセットしました');
+}
+function copyPartyText() {
+  const text = getParty().map((s,i) => {
+    const m = resolveMember(s);
+    return m ? `${i+1}. ${m.displayName} @ ${m.item} [${m.role}]` : `${i+1}. (未設定)`;
+  }).join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => showToast('構築テキストをコピーしました！')).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); showToast('構築テキストをコピーしました！'); }
+  catch (e) { showToast('コピーに失敗しました'); }
+  document.body.removeChild(ta);
 }
 
-function analyzeParty(members){
-  const issues=[],baseNames=members.map(m=>m.baseName);
-  const dupP=baseNames.filter((n,i)=>baseNames.indexOf(n)!==i);
-  if(dupP.length)issues.push({sev:'high',title:'ポケモン種族が重複しています',body:`${[...new Set(dupP)].join('、')} が重複しています。`});
-  const items=members.map(m=>m.item).filter(Boolean),dupI=items.filter((it,i)=>items.indexOf(it)!==i);
-  if(dupI.length)issues.push({sev:'high',title:'持ち物が重複しています',body:`「${[...new Set(dupI)].join('」「')}」が重複しています。`});
-  const megas=members.filter(m=>m.isMega);
-  if(megas.length===0)issues.push({sev:'high',title:'メガシンカ枠が0体です',body:'1対戦に1回メガ可能な環境のため、1〜2体の採用を推奨します。'});
-  else if(megas.length>=3)issues.push({sev:'mid',title:`メガシンカ枠が多すぎます（${megas.length}体）`,body:'基本は1〜2体に絞り、残りはタスキ・スカーフ・ゴツメ等に回すと安定します。'});
+function evaluateThreat(members, threat) {
+  let bestScore = -10, secondScore = -10, counters = [];
+  for (const m of members) {
+    let sc = 0;
+    let worstDef = 0;
+    for (const at of threat.atkTypes) {
+      const eff = effectiveDefMult(m, at);
+      if (eff > worstDef) worstDef = eff;
+    }
+    if (worstDef <= 0.5) sc += 4;
+    else if (worstDef === 1) sc += 1.5;
+    else if (worstDef === 2) sc -= 2;
+    else sc -= 4;
 
-  const typeSummary=TYPES.map(t=>{
-    let weak=0,resist=0;
-    const perMember=members.map(m=>{const e=effectiveDefMult(m,t);if(e>=2)weak++;else if(e<=0.5)resist++;return e;});
-    const unresisted=(resist===0),stackedWeak=(weak>=3);
-    const critical=(weak>=3&&resist===0)||(weak>=4)||(weak>=2&&resist===0&&['じめん','フェアリー','ゴースト','はがね','こおり','ドラゴン','ひこう','ほのお'].includes(t));
-    return {type:t,weak,resist,perMember,unresisted,stackedWeak,critical};
+    if (threat.cat === 'phys' && (m.tags.includes('physBulk') || m.role === '物理受け')) sc += 2.2;
+    if (threat.cat === 'spec' && (m.tags.includes('spBulk') || m.role === '特殊受け')) sc += 2.2;
+    if (m.ability === 'ばけのかわ' || m.ability === 'マルチスケイル' || m.item === 'きあいのタスキ') sc += 1.6;
+    if (m.ability === 'てんねん' && (threat.id.includes('カイリュー') || threat.id.includes('ギャラドス') || threat.id.includes('カメックス') || threat.id.includes('ミミッキュ'))) sc += 3;
+
+    let bestOff = 0;
+    for (const ot of m.off) {
+      let e = typeEff(ot, threat.types);
+      if (ot === 'じめん' && threat.ability === 'ふゆう') e = 0;
+      if (ot === 'ほのお' && threat.ability === 'ねつこうかん') e = 0.25;
+      if (e > bestOff) bestOff = e;
+    }
+    if (bestOff >= 4) sc += 3.5;
+    else if (bestOff >= 2) sc += 2.2;
+    else if (bestOff >= 1) sc += 0.5;
+    else sc -= 2;
+
+    const isSpecAttacker = (m.role === '特殊アタッカー' || m.role === '両刀アタッカー' || m.stats[3] >= 120);
+    const isPhysAttacker = (m.role === '物理アタッカー' || m.role === '積みエース' || m.stats[1] >= 120);
+    if (threat.bulk === 'physHigh' && isSpecAttacker) sc += 1.8;
+    if (threat.bulk === 'physHigh' && !isSpecAttacker && bestOff < 2) sc -= 1.8;
+    if (threat.bulk === 'spHigh' && isPhysAttacker) sc += 1.5;
+    if (threat.bulk === 'bothHigh' && m.tags.includes('wallbreak')) sc += 1.8;
+    if (threat.bulk === 'contact' && isPhysAttacker && !m.off.includes('じめん')) sc -= 1.5;
+
+    const effSpd = getEffectiveSpeed(m);
+    if (effSpd > threat.spd) sc += 1.8;
+    else if (m.tags.includes('priority') && !threat.id.includes('イエッサン')) sc += 1.2;
+
+    if (threat.id === 'サーフゴー' && (m.role === '起点作成・サポート' || m.role === '物理受け') && !m.off.includes('ほのお') && !m.off.includes('じめん') && !m.off.includes('ゴースト') && !m.off.includes('あく')) sc -= 2.5;
+    if (threat.id === 'イエッサン♂＋メガカメックス' && (m.tags.includes('terrain') || m.ability === 'かわりもの' || m.ability === 'てんねん')) sc += 2.5;
+    if (threat.id === 'カバルドン' && (m.tags.includes('antiStatus') || m.item === 'ラムのみ')) sc += 2.2;
+
+    if (sc >= 4.2) counters.push(m.displayName);
+    if (sc > bestScore) { secondScore = bestScore; bestScore = sc; }
+    else if (sc > secondScore) secondScore = sc;
+  }
+  const combined = bestScore * 0.65 + secondScore * 0.35;
+  let level = 'ok';
+  if (bestScore < 3.6 || combined < 2.4) level = 'severe';
+  else if (bestScore < 5.2 || combined < 4.0) level = 'caution';
+  return { threat, level, bestScore, combined, counters };
+}
+
+function analyzeParty(members) {
+  const issues = [];
+  const baseNames = members.map(m => m.baseName);
+  const dupPokes = baseNames.filter((n,i) => baseNames.indexOf(n) !== i);
+  if (dupPokes.length > 0) issues.push({ sev:'high', title:'ポケモン種族が重複しています', body:`${[...new Set(dupPokes)].join('、')} が重複しています。` });
+
+  const items = members.map(m => m.item).filter(Boolean);
+  const dupItems = items.filter((it,i) => items.indexOf(it) !== i);
+  if (dupItems.length > 0) issues.push({ sev:'high', title:'持ち物が重複しています', body:`「${[...new Set(dupItems)].join('」「')}」が重複しています。ランクバトルでは重複不可です。` });
+
+  const megaMembers = members.filter(m => m.isMega);
+  if (megaMembers.length === 0) issues.push({ sev:'high', title:'メガシンカ枠が0体です', body:'1対戦に1回メガシンカ可能な環境のため、1〜2体のメガ枠採用を強く推奨します。' });
+  else if (megaMembers.length >= 3) issues.push({ sev:'mid', title:`メガシンカ枠が多すぎます（${megaMembers.length}体）`, body:`選出幅が狭くなります。基本は1〜2体に絞り、他はタスキ・スカーフ・ゴツメ等へ。` });
+
+  const typeSummary = TYPES.map(t => {
+    let weak = 0, weak4 = 0, resist = 0, immune = 0;
+    const perMember = members.map(m => {
+      const eff = effectiveDefMult(m, t);
+      if (eff >= 4) { weak++; weak4++; }
+      else if (eff >= 2) weak++;
+      else if (eff === 0) { resist++; immune++; }
+      else if (eff <= 0.5) resist++;
+      return eff;
+    });
+    const unresisted = (resist === 0);
+    const stackedWeak = (weak >= 3);
+    const critical = (weak >= 3 && resist === 0) || (weak >= 4) || (weak >= 2 && resist === 0 && ['じめん','フェアリー','ゴースト','はがね','こおり','ドラゴン','ひこう','ほのお'].includes(t));
+    return { type:t, weak, weak4, resist, immune, perMember, unresisted, stackedWeak, critical };
   });
-  const crit=typeSummary.filter(x=>x.critical),unres=typeSummary.filter(x=>x.unresisted&&!x.critical);
-  if(crit.length)issues.push({sev:'high',title:`防御面で危険なタイプの一貫（${crit.map(x=>x.type).join('・')}）`,body:`${crit.map(x=>`${x.type}(弱点${x.weak}/半減以下${x.resist})`).join('、')} が通りやすい構成です。`});
-  else if(unres.length>=3)issues.push({sev:'mid',title:`半減・無効枠がないタイプが多め（${unres.slice(0,5).map(x=>x.type).join('・')}）`,body:'受け出し先がいないタイプが多いとサイクル戦で押し切られやすくなります。'});
 
-  const physCount=members.filter(m=>m.role==='物理アタッカー'||m.role==='積みエース'||(m.stats[1]>m.stats[3]+15&&!m.role.includes('受け'))).length;
-  const specCount=members.filter(m=>m.role==='特殊アタッカー'||m.role==='両刀アタッカー'||m.stats[3]>=125).length;
-  if(specCount===0)issues.push({sev:'high',title:'特殊アタッカーが不在です',body:'アーマーガア・カバルドン・メガグソクムシャ等の物理受けで詰みます。特殊枠を1〜2体入れましょう。'});
-  else if(physCount===0)issues.push({sev:'mid',title:'物理アタッカーが不在です',body:'ブラッキー・アシレーヌ・メガフラエッテ等の高特防組との打ち合いで不利になりやすいです。'});
+  const criticalTypes = typeSummary.filter(x => x.critical);
+  const unresistedTypes = typeSummary.filter(x => x.unresisted && !x.critical);
+  if (criticalTypes.length > 0) {
+    issues.push({ sev:'high', title:`防御面で危険なタイプの一貫（${criticalTypes.map(x=>x.type).join('・')}）`, body:`${criticalTypes.map(x=>`${x.type}(弱点${x.weak}/半減以下${x.resist})`).join('、')} が非常に通りやすい構成です。` });
+  } else if (unresistedTypes.length >= 3) {
+    issues.push({ sev:'mid', title:`半減・無効枠がないタイプが多め（${unresistedTypes.slice(0,5).map(x=>x.type).join('・')}）`, body:'受け出し先がいないタイプが多いとサイクル戦で押し切られやすくなります。' });
+  }
 
-  const hasPrio=members.some(m=>m.tags.includes('priority')),hasScarf=members.some(m=>m.item==='こだわりスカーフ'),hasS151=members.some(m=>m.stats[5]>=150);
-  const hasStop=members.some(m=>m.item==='きあいのタスキ'||m.ability==='ばけのかわ'||m.ability==='マルチスケイル'||m.ability==='かわりもの');
-  if(!hasS151&&!hasScarf&&!hasPrio)issues.push({sev:'high',title:'S151族（メガガブZ・メガルカリオZ）への切り返し不足',body:'先制技・スカーフ・タスキ・ミミッキュ等のストッパーを入れましょう。'});
-  else if(!hasStop&&!hasScarf)issues.push({sev:'mid',title:'積みエースへの切り返し手段が薄め',body:'タスキ・スカーフ・化けの皮のいずれかがあると全抜きを防ぎやすくなります。'});
+  const physCount = members.filter(m => m.role === '物理アタッカー' || m.role === '積みエース' || (m.stats[1] > m.stats[3] + 15 && !m.role.includes('受け'))).length;
+  const specCount = members.filter(m => m.role === '特殊アタッカー' || m.role === '両刀アタッカー' || m.stats[3] >= 125).length;
+  if (specCount === 0) issues.push({ sev:'high', title:'特殊アタッカーが不在です', body:'アーマーガア・カバルドン・メガグソクムシャ等の物理受けで詰みます。特殊枠を1〜2体入れましょう。' });
+  else if (physCount === 0) issues.push({ sev:'mid', title:'物理アタッカーが不在です', body:'ブラッキー・アシレーヌ・メガフラエッテ等の高特防組との打ち合いで不利になりやすいです。' });
 
-  const steelChecks=members.filter(m=>m.tags.includes('steelCheck')||m.off.includes('ほのお')||m.off.includes('じめん')||m.off.includes('かくとう'));
-  if(steelChecks.length<=1)issues.push({sev:'high',title:'はがねタイプへの打点が不足しています',body:'サーフゴー・ブリジュラス・メガグソクムシャ・アーマーガア対策の炎/地面/格闘打点を増やしましょう。'});
+  const hasPriority = members.some(m => m.tags.includes('priority'));
+  const hasScarf = members.some(m => m.item === 'こだわりスカーフ');
+  const hasS151 = members.some(m => m.stats[5] >= 150);
+  const hasStopper = members.some(m => m.item === 'きあいのタスキ' || m.ability === 'ばけのかわ' || m.ability === 'マルチスケイル' || m.ability === 'かわりもの');
 
-  const hasBreak=members.filter(m=>m.tags.includes('wallbreak')).length;
-  const hasBulk=members.filter(m=>m.tags.includes('physBulk')||m.tags.includes('spBulk')||m.role.includes('受け')||m.role.includes('クッション')).length;
-  if(hasBreak<=1)issues.push({sev:'mid',title:'高耐久サイクルの崩し性能が不足',body:'ハチマキ・メガネ未実装の環境のため、高火力メガや積み技・サーフゴー等の崩し枠があると安定します。'});
-  if(hasBulk===0)issues.push({sev:'mid',title:'クッション・引き先が0体です',body:'初手の型誤認で崩れやすいため、カバルドン・ブラッキー・ヤドキング等のクッション1枠も有効です。'});
+  if (!hasS151 && !hasScarf && !hasPriority) issues.push({ sev:'high', title:'S151族（メガガブZ・メガルカリオZ）への切り返し不足', body:'先制技・スカーフ・タスキ・ミミッキュ等のストッパーを組み込みましょう。' });
+  else if (!hasStopper && !hasScarf) issues.push({ sev:'mid', title:'積みエースへの切り返し手段が薄め', body:'タスキ・スカーフ・化けの皮のいずれかがあると全抜きを防ぎやすくなります。' });
 
-  const threatResults=THREATS.map(th=>evaluateThreat(members,th));
-  const severeThreats=threatResults.filter(r=>r.level==='severe'),cautionThreats=threatResults.filter(r=>r.level==='caution');
-  if(severeThreats.length)issues.push({sev:'high',title:`対策が薄い環境上位ポケモンが ${severeThreats.length}体 あります`,body:`特に【${severeThreats.slice(0,4).map(r=>r.threat.id).join('、')}】が危険です。`});
+  const steelChecks = members.filter(m => m.tags.includes('steelCheck') || m.off.includes('ほのお') || m.off.includes('じめん') || m.off.includes('かくとう'));
+  if (steelChecks.length <= 1) issues.push({ sev:'high', title:'はがねタイプへの打点が不足しています', body:'サーフゴー・ブリジュラス・メガグソクムシャ・アーマーガア対策の炎/地面/格闘打点を増やしましょう。' });
 
-  const avgRank=members.length?members.reduce((a,m)=>a+m.rank,0)/members.length:60;
-  const metaScore=Math.max(20,Math.min(100,Math.round(108-avgRank*1.35+(megas.length>=1&&megas.length<=2?8:-10))));
-  const synergyScore=Math.max(15,Math.min(100,Math.round(100-crit.length*14-unres.length*3.5-typeSummary.filter(x=>x.stackedWeak).length*4)));
-  let balanceScore=100;
-  if(specCount===0||physCount===0)balanceScore-=24;if(!hasPrio)balanceScore-=10;if(!hasStop&&!hasScarf)balanceScore-=12;
-  if(steelChecks.length<=1)balanceScore-=15;if(megas.length===0)balanceScore-=20;if(megas.length>=3)balanceScore-=12;
-  if(dupI.length||dupP.length)balanceScore-=20;if(hasBreak<=1)balanceScore-=10;
-  balanceScore=Math.max(15,Math.min(100,balanceScore));
-  const threatScore=Math.max(10,Math.min(100,Math.round(100-severeThreats.length*9.5-cautionThreats.length*3)));
+  const hasWallbreak = members.filter(m => m.tags.includes('wallbreak')).length;
+  const hasBulk = members.filter(m => m.tags.includes('physBulk') || m.tags.includes('spBulk') || m.role.includes('受け') || m.role.includes('クッション')).length;
+  if (hasWallbreak <= 1) issues.push({ sev:'mid', title:'高耐久サイクルの崩し性能が不足', body:'ハチマキ・メガネ未実装の環境のため、高火力メガや積み技・サーフゴー等の崩し枠があると安定します。' });
+  if (hasBulk === 0) issues.push({ sev:'mid', title:'クッション・引き先が0体です', body:'初手の型誤認で崩れやすいため、カバルドン・ブラッキー・ヤドキング等のクッション1枠も検討候補です。' });
 
-  const archAnalysis=ARCHETYPES.map(arch=>{
-    const overlap=arch.core.filter(c=>baseNames.includes(c)),missing=arch.core.filter(c=>!baseNames.includes(c));
-    const kr=arch.keyThreats.map(kt=>threatResults.find(tr=>tr.threat.id===kt)).filter(Boolean);
-    const bad=kr.filter(r=>r.level==='severe').length,warn=kr.filter(r=>r.level==='caution').length;
-    return {arch,overlap,missing,matchup:bad>=2?'不利':(bad===1||warn>=3?'微不利〜五分':'対応可能')};
+  const threatResults = THREATS.map(th => evaluateThreat(members, th));
+  const severeThreats = threatResults.filter(r => r.level === 'severe');
+  const cautionThreats = threatResults.filter(r => r.level === 'caution');
+  if (severeThreats.length > 0) {
+    issues.push({ sev:'high', title:`対策が薄い環境上位ポケモンが ${severeThreats.length}体 あります`, body:`特に【${severeThreats.slice(0,4).map(r=>r.threat.id).join('、')}】が危険です。下の補完候補や「脅威」タブを確認してください。` });
+  }
+
+  const avgRank = members.length ? members.reduce((a,m) => a + m.rank, 0) / members.length : 60;
+  const metaScore = Math.max(20, Math.min(100, Math.round(108 - avgRank * 1.35 + (megaMembers.length>=1 && megaMembers.length<=2 ? 8 : -10))));
+  const synergyPenalty = criticalTypes.length * 14 + unresistedTypes.length * 3.5 + typeSummary.filter(x=>x.stackedWeak).length * 4;
+  const synergyScore = Math.max(15, Math.min(100, Math.round(100 - synergyPenalty)));
+
+  let balanceScore = 100;
+  if (specCount === 0 || physCount === 0) balanceScore -= 24;
+  if (!hasPriority) balanceScore -= 10;
+  if (!hasStopper && !hasScarf) balanceScore -= 12;
+  if (steelChecks.length <= 1) balanceScore -= 15;
+  if (megaMembers.length === 0) balanceScore -= 20;
+  if (megaMembers.length >= 3) balanceScore -= 12;
+  if (dupItems.length > 0 || dupPokes.length > 0) balanceScore -= 20;
+  if (hasWallbreak <= 1) balanceScore -= 10;
+  balanceScore = Math.max(15, Math.min(100, balanceScore));
+
+  const threatScore = Math.max(10, Math.min(100, Math.round(100 - severeThreats.length * 9.5 - cautionThreats.length * 3)));
+  const archAnalysis = ARCHETYPES.map(arch => {
+    const overlap = arch.core.filter(c => baseNames.includes(c));
+    const missing = arch.core.filter(c => !baseNames.includes(c));
+    const keyResults = arch.keyThreats.map(kt => threatResults.find(tr => tr.threat.id === kt)).filter(Boolean);
+    const badCount = keyResults.filter(r => r.level === 'severe').length;
+    const warnCount = keyResults.filter(r => r.level === 'caution').length;
+    const matchup = badCount >= 2 ? '不利' : (badCount === 1 || warnCount >= 3 ? '微不利〜五分' : '対応可能');
+    return { arch, overlap, missing, matchup };
   });
-  const archScore=Math.max(25,Math.min(100,95-archAnalysis.filter(a=>a.matchup==='不利').length*18-archAnalysis.filter(a=>a.matchup!=='対応可能').length*6));
-  let totalScore=Math.round(metaScore*0.18+synergyScore*0.24+balanceScore*0.22+threatScore*0.26+archScore*0.10);
-  if(members.length<6)totalScore=Ma
+  const badArchCount = archAnalysis.filter(a => a.matchup === '不利').length;
+  const archScore = Math.max(25, Math.min(100, 95 - badArchCount * 18 - archAnalysis.filter(a=>a.matchup!=='対応可能').length * 6));
+
+  let totalScore = Math.round(metaScore * 0.18 + synergyScore * 0.24 + balanceScore * 0.22 + threatScore * 0.26 + archScore * 0.10);
+  if (members.length < 6) totalScore = Math.round(totalScore * (members.length / 6));
+  if (issues.length === 0) issues.push({ sev:'good', title:'大きな構築上の欠陥はありません！', body:'相性補完・役割バランス・脅威対応がいずれも高水準です。' });
+
+  return { totalScore, metaScore, synergyScore, balanceScore, threatScore, archScore, issues, typeSummary, threatResults, severeThreats, cautionThreats, archAnalysis, megaCount: megaMembers.length, physCount, specCount, criticalTypes };
+}
+
+function computeRecommendations(members, analysis) {
+  const existingNames = new Set(members.map(m => m.baseName));
+  const usedItems = new Set(members.map(m => m.item));
+  const needMega = (analysis.megaCount === 0);
+  const fullMega = (analysis.megaCount >= 2);
+  const needSpec = (analysis.specCount <= 1);
+  const needSteelCheck = (members.filter(m => m.tags.includes('steelCheck')).length <= 1);
+  const targetThreats = [...analysis.severeThreats, ...analysis.cautionThreats.slice(0, 4)].map(r => r.threat);
+  const weakTypes = analysis.typeSummary.filter(x => x.critical || x.unresisted).map(x => x.type);
+
+  const candidates = [];
+  for (const [pokeName, base] of Object.entries(POKEMON_DB)) {
+    if (existingNames.has(pokeName)) continue;
+    let item = base.defaultItem, role = base.defaultRole;
+    if (fullMega && base.megas && base.megas[item]) {
+      const f = ['きあいのタスキ','オボンのみ','こだわりスカーフ','いのちのたま','ラムのみ'];
+      item = f.find(x => !usedItems.has(x)) || 'ラムのみ';
+    } else if (usedItems.has(item)) {
+      const f = ['オボンのみ','たべのこし','きあいのタスキ','こだわりスカーフ','ゴツゴツメット','ふうせん','いのちのたま','ラムのみ','シュカのみ(地面半減)'];
+      item = f.find(x => !usedItems.has(x)) || 'ラムのみ';
+    }
+    const cand = resolveMember({ name:pokeName, item, role });
+    if (!cand) continue;
+
+    let score = 0, reasons = [];
+    const coveredTypes = weakTypes.filter(wt => effectiveDefMult(cand, wt) <= 0.5);
+    coveredTypes.forEach(wt => score += analysis.criticalTypes.some(c => c.type === wt) ? 14 : 6);
+    if (coveredTypes.length) reasons.push(`一貫する【${coveredTypes.slice(0,3).join('・')}】に耐性`);
+
+    const solved = [];
+    for (const th of targetThreats) {
+      if (evaluateThreat([cand], th).bestScore >= 4.5) {
+        score += analysis.severeThreats.some(s => s.threat.id === th.id) ? 16 : 7;
+        solved.push(th.id);
+      }
+    }
+    if (solved.length) reasons.push(`きつい【${solved.slice(0,3).join('・')}】対策`);
+    if (needMega && cand.isMega) { score += 18; reasons.push('不足しているメガ枠を確保'); }
+    if (needSpec && (cand.role === '特殊アタッカー' || cand.stats[3] >= 120)) { score += 12; reasons.push('特殊打点を補強'); }
+    if (needSteelCheck && cand.tags.includes('steelCheck')) { score += 10; reasons.push('鋼タイプへの打点'); }
+    if (cand.tags.includes('priority') && !members.some(m=>m.tags.includes('priority'))) { score += 9; reasons.push('先制技による縛り'); }
+    score += Math.max(0, 20 - base.rank * 0.35);
+
+    if (reasons.length) candidates.push({ cand, score, reasons });
+  }
+  candidates.sort((a,b) => b.score - a.score);
+  return candidates.slice(0, 5);
+}
+
+function applyRecommendation(recIdx, pokeName, item, role) {
+  const sel = document.getElementById('recSlot-' + recIdx);
+  let targetIdx = sel ? parseInt(sel.value, 10) : 5;
+  getParty()[targetIdx] = { name:pokeName, item, role };
+  saveStorage();
+  renderAll();
+  showToast(`SLOT${targetIdx+1}に ${pokeName} を反映しました！`);
+}
+
+function getGrade(score) {
+  if (score >= 90) return { g:'S', color:'#38bdf8', msg:'環境最上位クラスの完成度！' };
+  if (score >= 80) return { g:'A', color:'#22c55e', msg:'上位帯で戦える好バランス構築' };
+  if (score >= 68) return { g:'B', color:'#a3e635', msg:'実践レベル。穴を1〜2点詰めると◎' };
+  if (score >= 54) return { g:'C', color:'#f59e0b', msg:'やや穴あり。一貫や偏りを修正推奨' };
+  return { g:'D', color:'#ef4444', msg:'構造的な課題が多め。組み直し推奨' };
+}
+function barColor(v) { return v>=80 ? '#22c55e' : v>=60 ? '#38bdf8' : v>=45 ? '#f59e0b' : '#ef4444'; }
+
+function renderResults() {
+  const party = getParty();
+  const members = party.map(resolveMember).filter(Boolean);
+  const badgeEl = document.getElementById('threatBadge');
+
+  if (members.length === 0) {
+    document.getElementById('miniGrade').textContent = '-';
+    document.getElementById('miniScore').textContent = '0点';
+    document.getElementById('gradeText').textContent = '-';
+    document.getElementById('scoreText').textContent = '0 / 100点';
+    document.getElementById('gradeComment').textContent = '編成タブでポケモンを選択してください。';
+    document.getElementById('metricsBox').innerHTML = '';
+    document.getElementById('issuesList').innerHTML = '<div class="alert-item">編成タブでポケモンを選ぶか、サンプルを読み込んでください。</div>';
+    document.getElementById('recList').innerHTML = '';
+    document.getElementById('threatGrid').innerHTML = '';
+    document.getElementById('typeTableWrap').innerHTML = '';
+    document.getElementById('archetypeList').innerHTML = '';
+    badgeEl.style.display = 'none';
+    return;
+  }
+
+  const a = analyzeParty(members);
+  const gr = getGrade(a.totalScore);
+
+  // Mini Header Score
+  const mg = document.getElementById('miniGrade');
+  mg.textContent = gr.g;
+  mg.style.color = gr.color;
+  document.getElementById('miniScore').textContent = `${a.totalScore}点`;
+  if (a.severeThreats.length > 0) {
+    badgeEl.textContent = a.severeThreats.length;
+    badgeEl.style.display = 'inline-block';
+  } else {
+    badgeEl.style.display = 'none';
+  }
+
+  // Dashboard
+  const gEl = document.getElementById('gradeText');
+  gEl.textContent = gr.g;
+  gEl.style.color = gr.color;
+  document.getElementById('scoreText').textContent = `${a.totalScore} / 100点`;
+  document.getElementById('gradeComment').textContent = members.length < 6 ? `現在${members.length}/6体。6体揃えると正確に診断されます。` : gr.msg;
+
+  document.getElementById('summaryBadges').innerHTML = `
+    <span class="pill pill-info">メガ: ${a.megaCount}体</span>
+    <span class="pill pill-info">物${a.physCount}/特${a.specCount}</span>
+    <span class="pill ${a.severeThreats.length>=4?'pill-danger':(a.severeThreats.length>=2?'pill-warn':'pill-good')}">危険: ${a.severeThreats.length}体</span>
+  `;
+
+  const metrics = [
+    { label:'環境パワー', val:a.metaScore, desc:'M-C使用率上位パワー＆メガ枠適正' },
+    { label:'防御タイプ補完', val:a.synergyScore, desc:`危険な一貫: ${a.criticalTypes.length}件` },
+    { label:'役割バランス', val:a.balanceScore, desc:'物特比・先制技・S151/鋼対策・崩し' },
+    { label:'環境脅威耐性', val:a.threatScore, desc:`危険:${a.severeThreats.length} / 要注意:${a.cautionThreats.length}` },
+    { label:'上位構築相性', val:a.archScore, desc:'流行5アーキタイプへの対応力' }
+  ];
+  document.getElementById('metricsBox').innerHTML = metrics.map(mt => `
+    <div class="metric">
+      <div class="metric-head"><span>${mt.label}</span><span style="color:${barColor(mt.val)}">${mt.val}点</span></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${mt.val}%; background:${barColor(mt.val)};"></div></div>
+      <div class="metric-desc">${mt.desc}</div>
+    </div>
+  `).join('');
+
+  // Issues
+  document.getElementById('issuesList').innerHTML = a.issues.map(iss => `
+    <div class="alert-item ${iss.sev}">
+      <div class="alert-title">
+        <span>${iss.sev==='high'?'🚨':(iss.sev==='mid'?'⚠️':'✅')} ${iss.title}</span>
+        <span class="pill ${iss.sev==='high'?'pill-danger':(iss.sev==='mid'?'pill-warn':'pill-good')}">${iss.sev==='high'?'優先高':(iss.sev==='mid'?'改善余地':'良好')}</span>
+      </div>
+      <div class="alert-body">${iss.body}</div>
+    </div>
+  `).join('');
+
+  // Recommendations with slot selector
+  const recs = computeRecommendations(members, a);
+  const defaultTarget = party.findIndex(s => !s.name) !== -1 ? party.findIndex(s => !s.name) : 5;
+  const slotOptions = party.map((s, idx) => {
+    const label = s.name ? `SLOT${idx+1}(${s.name.slice(0,4)})` : `SLOT${idx+1}(空き)`;
+    return `<option value="${idx}" ${idx===defaultTarget?'selected':''}>${label}</option>`;
+  }).join('');
+
+  document.getElementById('recList').innerHTML = recs.map((r, i) => `
+    <div class="rec-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+        <div>
+          <strong>#${i+1} ${r.cand.displayName}</strong>
+          <span style="font-size:0.76rem; color:var(--accent);"> @ ${r.cand.item}</span>
+        </div>
+        <span class="rank-tag">使用率${r.cand.rank}位</span>
+      </div>
+      <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
+        ${r.cand.types.map(t=>`<span class="type-badge" style="background:${TYPE_COLOR[t]}">${t}</span>`).join('')}
+        <span style="font-size:0.73rem; color:var(--muted);">${r.cand.role} / ${r.cand.ability}</span>
+      </div>
+      <div style="font-size:0.78rem; color:#cbd5e1;">💡 ${r.reasons.join(' ／ ')}</div>
+      <div class="rec-actions">
+        <select id="recSlot-${i}">${slotOptions}</select>
+        <button class="btn btn-primary btn-sm" style="flex:1;" onclick="applyRecommendation(${i},'${r.cand.baseName}','${r.cand.item}','${r.cand.role}')">この枠に入れて試す</button>
+      </div>
+    </div>
+  `).join('') || '<div class="alert-item good">現在の構成で非常にバランスが取れています。</div>';
+
+  // Threats
+  let listThreats = [...a.threatResults].sort((x,y) => x.combined - y.combined);
+  if (threatFilter === 'severe') listThreats = listThreats.filter(r => r.level === 'severe');
+  else if (threatFilter === 'warn') listThreats = listThreats.filter(r => r.level === 'severe' || r.level === 'caution');
+
+  document.getElementById('threatSummary').textContent = `危険 ${a.severeThreats.length} ／ 要注意 ${a.cautionThreats.length} ／ 対応可 ${24 - a.severeThreats.length - a.cautionThreats.length}`;
+  document.getElementById('threatGrid').innerHTML = listThreats.map(r => {
+    const badge = r.level === 'severe'
+      ? '<span class="pill pill-danger">きつい</span>'
+      : (r.level === 'caution' ? '<span class="pill pill-warn">要注意</span>' : '<span class="pill pill-good">対応可</span>');
+    const counterStr = r.counters.length > 0 ? `対抗: ${r.counters.slice(0,3).join('・')}` : '明確な有利枠なし';
+    return `
+      <div class="threat-card ${r.level}">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
+          <strong style="font-size:0.86rem;">${r.threat.id}</strong>
+          ${badge}
+        </div>
+        <div style="font-size:0.74rem; color:var(--muted); margin-bottom:4px;">${r.threat.note}</div>
+        <div style="font-size:0.75rem; color:${r.counters.length?'#86efac':'#fca5a5'}; font-weight:700;">${counterStr}</div>
+      </div>
+    `;
+  }).join('') || '<div class="alert-item good">この条件に該当するきつい相手はありません！</div>';
+
+  // Type Matrix
+  const headerCells = members.map(m => `<th>${m.displayName.replace('メガ','M').slice(0,5)}</th>`).join('');
+  const rowsHtml = a.typeSummary.map(row => {
+    const cells = row.perMember.map(eff => {
+      let cls = '', txt = '1';
+      if (eff >= 4) { cls='eff-4'; txt='4×'; }
+      else if (eff >= 2) { cls='eff-2'; txt='2×'; }
+      else if (eff === 0) { cls='eff-0'; txt='無効'; }
+      else if (eff <= 0.25) { cls='eff-025'; txt='1/4'; }
+      else if (eff <= 0.5) { cls='eff-05'; txt='1/2'; }
+      return `<td class="${cls}">${txt}</td>`;
+    }).join('');
+    const status = row.critical ? '<span class="pill pill-danger">一貫</span>' : (row.unresisted ? '<span class="pill pill-warn">半減0</span>' : (row.stackedWeak ? '<span class="pill pill-warn">偏り</span>' : '<span class="pill pill-good">良好</span>'));
+    return `<tr class="${row.critical?'row-danger':''}"><td><span class="type-badge" style="background:${TYPE_COLOR[row.type]}">${row.type}</span></td>${cells}<td style="font-weight:700; color:${row.weak>=3?'#fca5a5':'inherit'}">${row.weak}</td><td style="font-weight:700; color:${row.resist===0?'#fcd34d':'#86efac'}">${row.resist}</td><td>${status}</td></tr>`;
+  }).join('');
+  document.getElementById('typeTableWrap').innerHTML = `<table><thead><tr><th>タイプ</th>${headerCells}<th>弱</th><th>耐</th><th>評価</th></tr></thead><tbody>${rowsHtml}</tbody></table>`;
+
+  // Archetypes
+  document.getElementById('archetypeList').innerHTML = a.archAnalysis.map(item => {
+    const cls = item.matchup === '不利' ? 'high' : (item.matchup === '対応可能' ? 'good' : 'mid');
+    const pillCls = item.matchup === '不利' ? 'pill-danger' : (item.matchup === '対応可能' ? 'pill-good' : 'pill-warn');
+    const simStr = item.overlap.length >= 2 ? `<div style="margin-top:4px; color:#7dd3fc;">📌 ${item.overlap.length}/6体一致（${item.overlap.join('・')}）。寄せるなら ${item.missing.slice(0,3).join('・')} も候補。</div>` : '';
+    return `<div class="alert-item ${cls}"><div class="alert-title"><span>${item.arch.name}</span><span class="pill ${pillCls}">相性: ${item.matchup}</span></div><div class="alert-body">${item.arch.desc}${simStr}</div></div>`;
+  }).join('');
+}
+
+function renderAll() {
+  [0,1,2].forEach(i => document.getElementById('saveBtn-' + i).classList.toggle('active', i === currentSlotIdx));
+  renderPartyEditor();
+  renderResults();
+}
+
+loadStorage();
+renderAll();
+</script>
+</body>
+</html>
